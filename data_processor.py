@@ -8,7 +8,7 @@ from backend.dataset_ingestion import load_dataset
 # Note: spaCy is optional and not strictly required for the core regex-based keyword extraction.
 try:
     nlp = spacy.load("en_core_web_sm")
-except:
+except OSError:
     nlp = None
 
 SKILL_HIERARCHY = {
@@ -64,6 +64,16 @@ def extract_skills(df):
     return dict(skill_counts)
 
 def process_dataset(data):
+    """
+    Main processing entry point.
+
+    Accepts either:
+    - a pandas DataFrame
+    - a dataset file path
+
+    This enables the system to support both local CSV files and
+    uploaded datasets from the Streamlit UI.
+    """
     if isinstance(data, pd.DataFrame):
         df = data
     else:
