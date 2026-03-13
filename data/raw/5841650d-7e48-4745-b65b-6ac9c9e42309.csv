@@ -1,0 +1,269 @@
+id,project_id,project_title,intern_id,intern_name,date,status,tasks_completed,next_tasks,blockers,notes,timestamp
+767,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,06-03-2026,on_track,"Evaluation Analysis of Qwen 3.5 Models — Conducted a detailed comparative analysis of three Qwen 3.5 model variants (0.8B, 2B full-precision, 2B int8) across 50 kinematics questions
+
+2B full-precision outperforms on all LLM judge dimensions (correctness: 4.80, pedagogical quality: 4.00, feedback relevance: 4.08)
+Int8 quantization degrades quality — performs closer to 0.8B than 2B full
+Error recovery identified as the weakest dimension across all models (3.08–3.62/5.0)",Integrate the improved system prompt (with Chain-of-Thought reasoning and few-shot examples) into the Colab pipeline notebook. Run the evaluation on 50 kinematics questions and compare the results for the Qwen 3.5-0.8B and Qwen 3.5-2B models.,,,2026-03-06 07:59:09.118031+00:00
+763,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,05-03-2026,on_track,"Evaluated Qwen3.5-0.8B-Base and Qwen3.5-2B models on the tutoring pipeline and compared their performance using the LLM Judge evaluation metrics.
+
+Results show that Qwen3.5-2B consistently outperforms 0.8B across all dimensions, with the largest improvements in Next-Step Clarity (+0.76) and Feedback Relevance (+0.48), indicating clearer guidance and more actionable feedback.
+
+A notable distribution shift was observed in Next-Step Clarity, where the 2B model produced significantly more high-quality next-step prompts.
+
+The 0.8B model frequently generated vague or repetitive next-step instructions, reducing tutoring effectiveness.
+
+Both models still struggle with Error Recovery on hard multi-step problems, indicating room for improvement in guiding students back after mistakes.","Re-evaluate the pipeline after incorporating the latest prompt improvements suggested by Antigravity to enhance Error Recovery behavior.
+
+Run evaluation for both Qwen3.5-0.8B and Qwen3.5-2B models using the updated prompts and compare the updated LLM Judge metric scores.
+
+Additionally, test the Qwen3.5-2B INT8 quantized model on the same pipeline to analyze its performance and compare it with the full 2B model.",,,2026-03-05 08:04:17.660119+00:00
+761,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,04-03-2026,on_track,"Analyzed why the INT8 (q8_0) quantized model sometimes performs better than the full base model.
+
+Key Observations:
+ 1. INT8 quantization can introduce certain effects such as:
+ 2. Compressing model weights
+ 3. Reducing small noisy weight magnitudes
+ 4. Smoothing activation variance
+ 5. Slightly reducing overconfidence spikes
+
+In some cases, this behaves similarly to a regularization effect.
+
+For smaller models (e.g., 4B parameters), these effects can:
+   Reduce hallucination bursts
+   Reduce unstable reasoning chains
+   Produce shorter and more deterministic responses
+   Improve instruction adherence
+
+Due to these factors, INT8 models may occasionally achieve higher judge scores, particularly in structured tutoring or step-guided tasks.
+
+Experiments Conducted:
+ 1. Evaluated Qwen3-4B Base model with thinking enabled and disabled.
+ 2. Evaluated Qwen3-4B INT8 (q8_0) model with thinking enabled and disabled.","1. Evaluate Qwen3.5-0.8B-Base and Qwen3.5-2B models on the same pipeline.
+2. Compare their performance across the defined evaluation metrics.",,,2026-03-04 08:29:20.144362+00:00
+752,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,02-03-2026,on_track,"Brainstormed failure cases related to antigravity scenarios and proposed improvements in the System Prompt, along with enhanced Error-Specific Guidance details.
+
+Evaluated the following models using the latest prompt updates:
+     Qwen3-4B (Full model)
+     Qwen3-4B (INT8 quantized)
+     Gemma3-4B-IT
+
+Observed the best performance with the Qwen3-4B INT8 model, achieving rubric scores greater than 4 across all five evaluation metrics.
+
+Completed a Root-Cause Analysis (RCA) comparing Qwen3-4B Full vs. INT8 rubric score differences.
+
+The full model loses points due to four recurring failure patterns.
+
+The most significant issue is the generation of irrelevant or misleading follow-up questions, which tend to confuse rather than guide the student.
+
+1. Irrelevant or Misleading Next-Step Questions
+
+Impact: Highest — negatively affects Correctness, Next-Step Clarity, and Error Recovery simultaneously.
+
+The full model occasionally generates arithmetic sub-questions that are mathematically unrelated to the student’s actual mistake. This represents the largest quality gap between the Full and INT8 models.
+
+In contrast, the INT8 model produces more focused, targeted, and error-aligned guidance, which leads to consistently higher rubric scores.","Analyze why the INT8 (q8_0) model is outperforming the full model, despite being quantized.
+
+Whether the full model is over-reasoning or generating unnecessary sub-questions",,,2026-03-02 06:50:43.570088+00:00
+746,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,27-02-2026,on_track,"1. Tested the current pipeline using the INT-8 quantized Qwen3-4B model.
+Evaluated the Qwen3-4B INT8 quantized variant on a 50-question tutoring dataset (with fixed student answers) using a T4 GPU (Google Colab).
+
+Inference Time Comparison:
+Full precision model (FP16): ~30–40 minutes for 50 questions
+INT8 quantized model: ~4 hours for 50 questions
+Per-step latency (INT8): ~1–2 minutes per response
+
+Performance Metrics Comparison
+Full Model (FP):
+Correctness: 4.68
+Pedagogical Quality: 3.94
+Feedback Relevance: 4.22
+Next Step Clarity: 4.12
+Error Recovery: 3.74
+
+INT8 Quantized Model:
+Correctness: 4.62
+Pedagogical Quality: 3.85
+Feedback Relevance: 4.04
+Next Step Clarity: 3.88
+Error Recovery: 3.57
+
+Observation:
+Quantization caused a slight drop across pedagogical and recovery-related metrics, along with a significant increase in inference latency.
+
+
+2. Brainstormed improvement strategies for current results (vs. ChatGPT-level responses).
+Conducted structured brainstorming with GPT and Antigravity.
+
+Implemented suggested prompt refinements, particularly targeting:
+Error recovery behavior
+Next-step clarity
+Pedagogical structuring
+
+Re-tested the base model using the updated prompt configuration.
+Result: Notable improvement in evaluation scores compared to previous iterations.","Currently running the Gemma3-4B-IT model on the pipeline for comparative benchmarking.
+
+If required, I will also evaluate the Qwen3-4B-INT8 variant using the latest prompt configuration to measure prompt sensitivity under quantization.",,,2026-02-27 05:40:28.999558+00:00
+743,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,26-02-2026,on_track,"1. Manually corrected the evaluation of both tutor and student responses to eliminate any potential misguidance or scoring inconsistencies.
+2. Re-evaluated the latest conversation set using the updated judge configuration.
+3. Ensured student responses are fully grounded (removed dynamic student behavior to maintain evaluation stability and fairness).
+
+Evaluation Report Summary:
+1. Significant improvement observed across all rubric scores.
+2. Strong gains in correctness, feedback relevance, and next-step clarity.
+3. Error recovery and pedagogical quality also improved compared to previous iterations.
+4. Overall tutor performance shows measurable stability and consistency after judge updates.","1. Test the current pipeline using the INT-8 quantized Qwen3-4B model.
+2. Brainstorm improvement strategies for the current results (in comparison with ChatGPT-level responses).
+3. Evaluate and benchmark the pipeline using the Gemma3-4B model for comparative performance analysis.",,,2026-02-26 08:11:23.865576+00:00
+737,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,25-02-2026,on_track,"Revised the Judge prompt to improve scoring across the five evaluation metrics.
+
+Updated the User prompt so that when a student makes mistakes, the previous iterations (including identified mistakes and prior evaluations) are sent to the LLM for better contextual assessment.
+
+Evaluated tutor responses for 50 questions using GPT-5.1 as the judge.
+
+Observed improvement in rubric scores, particularly in Error Recovery and Pedagogical Quality, compared to previous iterations.
+
+Manually reviewed the conversations and the judgments provided by GPT.
+
+Identified several issues related to validation logic and justification quality.","Manually correct the evaluation of both tutor and student responses to eliminate any potential misguidance.
+
+Re-evaluate the latest conversations using the updated judge configuration.
+
+Ensure that student responses are grounded (i.e., remove dynamic student behavior).",,,2026-02-25 08:25:47.699261+00:00
+732,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,24-02-2026,on_track,"Evaluated 50 questions with tutor responses on 5 different metrics such as: 
+Pedagogical Quality : Does the tutor guide the student to discover the answer, or just tell them?
+Correctness : Does the tutor's judgment agree with the validator?
+Feedback Relevance : Is the feedback about the student's actual mistake, or generic?
+Next Step Clarity : Is the 'Next Step' instruction clear and aligned with the solution path?
+Error Recovery : When the student gets it wrong, does the tutor help them fix it effectively?
+
+The average scores for all the above metrics obtained were greater than the passing score . Overall Tutor score is 3.95/5.0.",Improve the prompt of GPT-5.1 as judge and  evaluate the responses again. Ask the LLM to give small explanation why it has given that rating.,,,2026-02-24 07:51:39.486893+00:00
+726,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,23-02-2026,on_track,Created Brain and Tutor Pipeline and Evaluated it for 50 dataset samples. Run the Evaluation script with judge as GPT-5.1 to test the tutor behavior analysis. Plotted the charts for different visualization metrics.,Will take up the next task as guided.,,,2026-02-23 05:54:24.796047+00:00
+723,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,20-02-2026,on_track,Created a pipeline for Brain and Tutor and tested it with few samples.,Test for more samples from dataset and evaluate it.,,,2026-02-20 04:14:09.558944+00:00
+721,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,19-02-2026,on_track,"Completed the analysis of Qwen3-1.7B tutor responses, including evaluation of both thinking and non-thinking modes.
+
+Key Findings:
+
+1. No quality gain in thinking mode
+Testing shows that the thinking mode behaves similarly to the non-thinking mode.
+Although the model spends 10–12 seconds generating internal reasoning, this delay does not improve tutoring quality or correctness.
+
+2. Premature progression in the initial step
+Instead of prompting the student to identify given quantities, the tutor frequently states the values itself and immediately moves to the next step, violating the intended step-wise tutoring flow.
+
+3. Weak adherence to system prompt and validator
+Tutor responses often ignore system-prompt instructions and contradict validator outcomes, indicating poor compliance with control signals and step discipline.
+
+4. Non-Socratic next-step phrasing
+Rather than asking a student-facing guiding question, the tutor sometimes produces instructional or meta-directive text (e.g., guiding statements about how to compute values), which breaks the conversational tutoring style.
+
+5. Premature formula disclosure
+In multiple cases, the tutor reveals the governing formula in the very first step, before the student identifies knowns/unknowns or selects a formula, causing answer leakage and weakening guided learning.",Review the existing tutor pipeline codebase and design a new tutoring pipeline using Qwen3-4B as the tutor LLM,,,2026-02-19 06:47:59.021250+00:00
+716,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,18-02-2026,on_track,"Conducted evaluation of the Qwen3-1.7B tutor model by generating and analyzing responses across 17 kinematics questions, focusing on correctness, step-wise reasoning, tutoring quality, and error-handling behavior.
+Key Failure Modes Observed
+
+Answer leakage in feedback – tutor reveals formulas or reasoning before the student derives them.
+
+Incorrect final-step guidance – correct student answers are marked incorrect with wrong remediation.
+
+Early step skipping – tutor advances without completing proper problem setup or reasoning sequence.
+
+Directive rather than Socratic tutoring – next steps are instruction-style instead of guided hints.
+
+Validator–tutor misalignment – tutor explanation contradicts validator error type (e.g., wrong unit attribution).
+
+Step hallucination / wrong task transition – tutor ignores expected step and introduces unrelated reasoning.
+
+Pedagogical inconsistency – feedback quality and reasoning depth vary across similar problems.","Analyze the tutor dataset to ensure alignment with the expected tutoring response format, and update or correct inconsistencies where necessary.",,,2026-02-18 08:01:38.681927+00:00
+708,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,17-02-2026,on_track,Added descriptions for the given and to-find variables in the brain output files.,Analyze the failure and negative cases of the Qwen3-4B model and document the findings in a report or spreadsheet.,,,2026-02-17 04:14:05.710034+00:00
+706,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,16-02-2026,on_track,Completed the verification tickets from previous milestones and documented the results for the Brain and Tutoring Pipeline using the Qwen3-4B model.,"Add descriptions for the given and to-find variables in the brain output files. Analyze the failure and negative cases in the Qwen3-4B model, and document the analysis results in a report or spreadsheet.",,,2026-02-16 07:40:29.223570+00:00
+704,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,13-02-2026,on_track,Tested the code will all 17 kinematics Questions. Created flow diagram for 3 level architecture and documented the results for Qwen3-4B model,Will continue next task as guided,,,2026-02-13 11:33:01.685080+00:00
+702,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,12-02-2026,on_track,"Pipeline architecture, validator, tutor pipeline, pedagogical refinement
+Brain Engine restructuring (17 questions with 
+select_formula , breakdown, , state_final_answer)
+Prompt redesign — natural teacher persona, step-type coaching
+Design 1 alignment — validator results in system prompt, user prompt = state only",Testing the code with the questions,,,2026-02-12 09:25:43.912466+00:00
+699,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,11-02-2026,on_track,"Analysis of the Gemma3-1B tutor is complete. The report covers all 5 sessions (3 without few-shot, 2 with few-shot) and includes a comparison with the Qwen3-4B model.
+
+Key takeaway: Gemma3-1B is significantly worse than Qwen3-4B across all dimensions — it hallucinates evaluations on problem submission (4/5 sessions), gets stuck in wrong_unit loops, produces catastrophic arithmetic errors (e.g., 420+280=600), fabricates physics formulas, and the few-shot examples actually make it worse by causing complete problem confusion.",Will continue next task as guided,,,2026-02-11 05:25:32.556959+00:00
+696,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,10-02-2026,on_track,"Documented the root causes of weak performance (e.g., rule violations, weak hints, and incorrect evaluations).
+Identified moderate-quality responses and partial reasoning gaps in the Qwen3-4B model.
+Also plotted charts comparing the average scores of previous LLM results.",Conducting an analysis of the Qwen3-4B model’s performance following prompt modifications to assess improvements in response quality and reasoning.,,,2026-02-10 08:19:18.877875+00:00
+692,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,09-02-2026,on_track,"1. Generated metric-wise analytical graphs for:
+   Step-wise Control
+   Evaluation Accuracy (Calculation)
+   Hint Quality
+   Rule Compliance
+   Pedagogical Quality
+
+ 2. Visualized score distributions across Easy, Medium, and Hard difficulty levels.","Perform detailed metric-wise qualitative analysis of model responses.
+Document root causes of weak performance (e.g., rule violations, weak hints, incorrect evaluations).
+Moderate-quality responses and partial reasoning gaps",,,2026-02-09 07:58:14.623925+00:00
+689,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,06-02-2026,on_track,"Evaluated Qwen3-4B LLM as a Teacher for Step-wise Physics Guidance with the updated prompt and few shot examples.
+Completed quality assessment of the tutoring conversation",Plotting the graphs of different metrics for visual analysis and summary,,,2026-02-06 08:26:48.692693+00:00
+686,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,05-02-2026,on_track,"Evaluated Qwen3-4B LLM as a Teacher for Step-wise Physics Guidance.
+Completed quality assessment of the tutoring conversation and documented key failures and improvements.
+Performed step-wise evaluation of the tutoring dialogue, analyzing physics accuracy, feedback quality, rule compliance, and pedagogical effectiveness. Identified critical false-negative grading and loop-handling issues.",Will continue with the next tasks as guided.,,,2026-02-05 05:36:05.378431+00:00
+681,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,02-02-2026,on_track,"Comparative Analysis of LLMs for Kinematics Problem Solving
+
+Observations
+----------------------
+1. A total of 15 kinematics questions were selected for evaluation, comprising 5 questions each from easy, medium, and hard difficulty levels.
+
+2. The experiment was conducted using **GPT-5.1**:
+   - All 15 questions were solved correctly.
+   - The model provided clear, step-by-step explanations for each problem.
+   - Calculations were presented in a simplified manner, with the problems broken down into logical intermediate steps, making the solutions easy to follow.
+
+3. The experiment was conducted using the **Qwen3-8B model**:
+   - 14 out of 15 questions were solved correctly.
+   - The solutions generally contained fewer explanatory steps compared to GPT-5.1.
+   - For Question No. 13 (hard difficulty), the model reached the final answer prematurely and then performed additional calculations as a form of verification, resulting in an inconsistent reasoning flow.
+   
+4. The experiment was conducted using the **Qwen3-4B model**:
+   - 14 out of 15 questions were solved correctly.
+   - The explanations were well-structured and detailed, comparable to those generated by GPT-5.1.
+   - Solutions were written in simple, student-friendly English, and the calculation steps were clearly simplified.
+   - For Question No. 13 (hard difficulty), the model was able to reach the intermediate steps but failed to complete the solution to arrive at the final answer.","Run the Evaluation for models: Qwen3-1.7B , Qwen3-0.6B.
+Check whether LLMs correctly solve problems across all difficulty levels",,,2026-02-02 05:31:59.053438+00:00
+678,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,30-01-2026,on_track,"Generated & Analyze Kinematics Questions Using Qwen3:8B. For different difficulties levels such as : Easy, Medium and Hard.","Evaluate how well large language models (LLMs) such as Qwen3-8B and GPT-5.1 can:
+
+Understand physics problems from CBSE/ICSE Classes 9–12
+
+Apply correct physical concepts and equations
+
+Follow kinematics sign conventions
+
+Solve the problem completely",,,2026-01-30 06:49:19.464780+00:00
+664,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,22-01-2026,on_track,"1. Converted the OntoNotes5 dataset prompt format to follow the new instruction strategy for NER fine-tuning.
+2. The prompt now includes only examples of the entity types to be detected, without explicitly mentioning entity names.
+3. Model fine-tuning is currently in progress for the gemma3-1b model with:
+   - Epochs: 1
+   - LoRA rank: 64","1. Once fine-tuning is completed, the model will be:
+  - Evaluated on seen entities
+  - Evaluated on unseen entities
+2. Results will be analyzed to assess:
+  - Generalization performance
+ - Impact of the new prompt strategy",,,2026-01-22 06:04:41.562129+00:00
+661,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,21-01-2026,on_track,"Completed Testing on MultiNerd Dataset with total samples :16454
+Micro F1 score of 15 entities is: 67% and macro F1 Score is: 24%
+Hallucinated entity types by the model (~45) (Examples: ANAnimal, ANNPC, BIO, CARD, FAC, G21, G42, G4PE, GReligion, G_LOC, WORK_EVENT, WORK_PERSON, WORK_OF_ART)","Converting the ontonotes5 dataset prompt format to follow a new instruction strategy for NER Finetuning.
+The prompt should only include examples of the entity types that need to be detected.",,,2026-01-21 08:02:47.026930+00:00
+659,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,20-01-2026,on_track,"Completed testing on Unseen Entities for gemma-1b model. F1 score is 40%.
+The model results are good on seen entities with micro F1 score as 85% and macro F1 score as 77%.
+Updated the results in the excel sheet.",Prepare the ontonotes 5 dataset with the updated prompt,,,2026-01-20 08:11:03.972197+00:00
+655,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,16-01-2026,on_track,"Finetuning gemma3-1b-it with fewshot prompting strategy on ontonotes5 dataset.
+Lora rank as 32.",After finetuning is completed will start with model inference testing,,,2026-01-16 04:58:40.503655+00:00
+653,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,15-01-2026,on_track,"Completed testing for seen and unseen entities for finetuned gemma3-270m-it model with few shot strategy.
+Generating analysis with  the help of antigravity, claude, gemini and chatgpt how to improve the results",Analyse the results and take further actions as suggested.,,,2026-01-15 05:48:36.781911+00:00
+650,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,13-01-2026,on_track,"Prepared Summary Report for all the Finetuning & Few-Shot Evaluation of Gemma Models (NER Tasks).
+Finetuned gemma3-270m-it model using fewshot prompting strategy for 1 Epoch",Complete finetuning for remaining epochs,,,2026-01-13 06:09:57.699522+00:00
+647,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,12-01-2026,on_track,Prepared excel sheet for NER Finetuning and Evaluation Results,Finetune gemma3 model on ontonote5 dataset with few shot prompting,,,2026-01-12 08:32:11.427926+00:00
+645,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,09-01-2026,on_track,"Completed training and testing of DPO model with more number of epochs as well as  few shot prompting. Analysed the results.
+Completed training and testing for gemma-270m-it model.","Train and Test the gemma-1b-model with few shot prompting. Analyse the results.
+Prepare excel sheet for all the experiments.",,,2026-01-09 08:53:44.487354+00:00
+639,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,07-01-2026,on_track,Corrected the prompt structure for few shot prompting,Test the unseen entities with new prompt structure for base model and dpo trained model.,,,2026-01-07 04:51:52.178715+00:00
+635,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,02-01-2026,on_track,"Evaluation for finetuned ""gemma-1b-it""  is completed for 8261 Samples. 
+Results are good on each entities. 
+Compared to Gemma-270M, Gemma-1B:
+Handles rare entities better
+Shows improved entity boundary detection",Test on unseen entities types few shot examples,,,2026-01-02 08:05:02.993814+00:00
