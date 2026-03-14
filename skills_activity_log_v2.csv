@@ -1,0 +1,1914 @@
+id,project_id,project_title,intern_id,intern_name,date,status,tasks_completed,next_tasks,blockers,notes,timestamp
+600,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,02-01-2026,on_track,"Set up the finetuning environment on Colab using HuggingFace Transformers and PEFT library.
+
+Environment Setup:
+  - Installed compatible versions: transformers==4.40, peft==0.10, bitsandbytes==0.43
+  - Verified A100 GPU availability and tested with a dummy forward pass
+  - Confirmed LoRA adapter attaches correctly to attention layers
+
+Smoke Test Results:
+  - Batch size 4, sequence length 512 — no OOM errors
+  - Training step time: ~1.2s per step on A100
+
+HuggingFace and PyTorch skills were central to this setup.",Prepare the dataset in instruction-tuning format and begin LoRA finetuning with rank 16.,,,2026-01-02 07:58:14.000000+00:00
+675,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,02-01-2026,on_track,"Built baseline RAG pipeline using LangChain and FAISS.
+
+Architecture:
+  - Embedding model: sentence-transformers/all-MiniLM-L6-v2
+  - Vector store: FAISS with L2 index
+  - LLM: Qwen3-8B served via local vLLM endpoint
+  - Retriever: top-k=5 dense retrieval
+
+Baseline Retrieval Accuracy (100 test queries):
+  - Top-1 accuracy: 72.3%
+  - Top-5 accuracy: 89.1%
+  - Mean Reciprocal Rank (MRR): 0.74
+
+LangChain orchestration and API Development skills were central to this setup. The vLLM serving endpoint was designed for low-latency batch inference.",Experiment with different chunk sizes and embedding models to improve retrieval accuracy.,,,2026-01-02 10:49:47.000000+00:00
+759,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,02-01-2026,on_track,"Set up VLM evaluation framework for CLIP, LLaVA-1.5-7B, and InternVL2-8B.
+
+Environment:
+  - GPU: 2x A100 40GB (multi-GPU inference via accelerate)
+  - Datasets loaded via HuggingFace datasets: VQA-v2, TextVQA, ChartQA
+
+Baseline Results on VQA-v2 (2,000-sample subset):
+  Model           Accuracy   Latency/sample
+  CLIP:           54.2%      120ms
+  LLaVA-1.5-7B:  63.8%      340ms
+  InternVL2-8B:  71.4%      510ms
+
+Computer Vision and PyTorch skills were essential for setting up multi-GPU inference correctly.",Expand evaluation to TextVQA and ChartQA benchmarks.,,,2026-01-02 11:36:06.000000+00:00
+968,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,05-01-2026,on_track,"Set up multilingual NLU evaluation pipeline for 6 languages: English, Hindi, Bengali, Tamil, Marathi, Telugu.
+
+Framework Design:
+  - Unified inference wrapper for mBERT and XLM-R using HuggingFace Transformers
+  - Standardized input/output schema for XNLI and TyDi QA tasks
+  - Evaluation runner with per-language, per-difficulty breakdowns
+
+Token Budget Analysis:
+  - Average token lengths differ significantly across scripts:
+    English: 18.4 tokens/sentence
+    Hindi:   22.1 tokens/sentence
+    Tamil:   28.3 tokens/sentence  ← highest, due to agglutinative morphology
+
+NLP and Python skills were central to the pipeline design. Documentation written for all components.",Run XNLI benchmark on mBERT and XLM-R across all 6 languages.,,,2026-01-05 04:58:22.000000+00:00
+1057,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,05-01-2026,on_track,"Built baseline RAG pipeline using LangChain and FAISS.
+
+Architecture:
+  - Embedding model: sentence-transformers/all-MiniLM-L6-v2
+  - Vector store: FAISS with L2 index
+  - LLM: Qwen3-8B served via local vLLM endpoint
+  - Retriever: top-k=5 dense retrieval
+
+Baseline Retrieval Accuracy (100 test queries):
+  - Top-1 accuracy: 72.3%
+  - Top-5 accuracy: 89.1%
+  - Mean Reciprocal Rank (MRR): 0.74
+
+LangChain orchestration and API Development skills were central to this setup. The vLLM serving endpoint was designed for low-latency batch inference.",Experiment with different chunk sizes and embedding models to improve retrieval accuracy.,,,2026-01-05 09:56:54.000000+00:00
+1138,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,05-01-2026,on_track,"Set up VLM evaluation framework for CLIP, LLaVA-1.5-7B, and InternVL2-8B.
+
+Environment:
+  - GPU: 2x A100 40GB (multi-GPU inference via accelerate)
+  - Datasets loaded via HuggingFace datasets: VQA-v2, TextVQA, ChartQA
+
+Baseline Results on VQA-v2 (2,000-sample subset):
+  Model           Accuracy   Latency/sample
+  CLIP:           54.2%      120ms
+  LLaVA-1.5-7B:  63.8%      340ms
+  InternVL2-8B:  71.4%      510ms
+
+Computer Vision and PyTorch skills were essential for setting up multi-GPU inference correctly.",Expand evaluation to TextVQA and ChartQA benchmarks.,,,2026-01-05 12:44:42.000000+00:00
+680,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,06-01-2026,on_track,"Tested 3 chunk sizes (256, 512, 1024 tokens) across 3 embedding models.
+
+Chunking Experiment Results (MRR on 100 queries):
+  Chunk Size    all-MiniLM-L6   bge-base   e5-large
+  256 tokens:   0.71            0.73       0.76
+  512 tokens:   0.74            0.77       0.81  ← best overall
+  1024 tokens:  0.69            0.72       0.78
+
+Best Configuration: 512 tokens, 64 overlap, e5-large embeddings → MRR: 0.81
+
+SQL used to log all 9 experiment configurations and query results for systematic comparison. Python batch evaluation scripts ran all configs automatically.",Integrate cross-encoder re-ranker on top of best retrieval configuration.,,,2026-01-06 08:03:54.000000+00:00
+607,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,06-01-2026,on_track,"Converted raw kinematics QA dataset into instruction-tuning format.
+
+Data Preprocessing Steps:
+  1. Removed 214 duplicate entries from 3,800 raw samples
+  2. Filtered out samples with incomplete answer fields (removed 87 samples)
+  3. Normalized question formatting — stripped HTML tags, fixed encoding issues
+  4. Applied train/val/test split: 80/10/10 → 3,199 / 400 / 100 samples
+
+Instruction Format Used:
+  System: ""You are a step-by-step physics tutor...""
+  User: ""<problem_statement>""
+  Assistant: ""<step_wise_solution>""
+
+Python scripting skills were applied throughout the pipeline.","Begin LoRA finetuning run with rank 16, learning rate 2e-4, 3 epochs.",,,2026-01-06 10:39:28.000000+00:00
+765,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,06-01-2026,on_track,"Applied comprehensive data preprocessing to normalize inputs across benchmarks.
+
+Preprocessing Steps:
+  1. Resized all images to model-native resolution (448x448 for InternVL2, 336x336 for LLaVA)
+  2. Normalized pixel values using per-model mean/std
+  3. Fixed 312 corrupted image entries in TextVQA (replaced with placeholder)
+  4. Standardized answer format: stripped punctuation, lowercased for exact-match scoring
+  5. Removed 88 ambiguous questions with multiple valid answers
+
+Data Preprocessing and Computer Vision skills were central to ensuring evaluation consistency across models.",Run inference on cleaned TextVQA and ChartQA splits for all 3 models.,,,2026-01-06 12:38:47.000000+00:00
+971,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,07-01-2026,on_track,"Evaluated mBERT and XLM-R on XNLI across all 6 languages.
+
+XNLI Results (Accuracy):
+  Language    mBERT   XLM-R   Delta
+  English:    82.1%   86.3%   +4.2%
+  Hindi:      74.3%   79.8%   +5.5%
+  Bengali:    69.2%   74.1%   +4.9%
+  Tamil:      61.4%   67.2%   +5.8%
+  Marathi:    63.8%   69.1%   +5.3%
+  Telugu:     60.1%   65.9%   +5.8%
+  Average:    68.5%   73.7%   +5.2%
+
+Statistical Analysis: Paired t-test across all language pairs — XLM-R improvement is significant (p < 0.01) for all 6 languages. Effect size (Cohen's d) ranges from 0.41 to 0.67.
+
+Statistical Analysis and Multilingual AI skills were both applied here.",Run TyDi QA evaluation. Investigate why low-resource languages show larger gaps.,,,2026-01-07 04:48:24.000000+00:00
+864,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,07-01-2026,on_track,"Collected and organized 5 hours of Hindi speech audio from volunteer contributors.
+
+Collection Summary:
+  - Total volunteers: 28
+  - Total audio collected: 5.1 hours (18,360 seconds)
+  - Recording format: 16kHz, mono, WAV
+  - Age distribution: 18–24 (61%), 25–35 (31%), 35+ (8%)
+
+Preprocessing Applied:
+  - Normalized all audio to -23 LUFS using ffmpeg
+  - Segmented long recordings into utterances using Voice Activity Detection (pyannote)
+  - Resulting segments: 1,312 utterances, avg duration 14.0s
+
+Data Preprocessing and Speech Processing skills were central to this phase. All scripts version-controlled via Git.",Transcribe all audio using Whisper-large-v3 and validate transcript quality.,,,2026-01-07 07:02:22.000000+00:00
+769,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,07-01-2026,at_risk,"Evaluated all 3 VLMs on TextVQA and ChartQA.
+
+TextVQA Results (1,000 samples):
+  Model           Accuracy   OCR-heavy Q Accuracy
+  CLIP:           38.1%      21.4%
+  LLaVA-1.5-7B:  63.9%      54.2%
+  InternVL2-8B:  72.3%      67.8%  ← best
+
+ChartQA Results (800 samples):
+  Model           Accuracy
+  CLIP:           29.3%
+  LLaVA-1.5-7B:  64.7%
+  InternVL2-8B:  79.1%  ← best
+
+All runs tracked via Weights & Biases with reproducible configs. Weights & Biases and Evaluation & Benchmarking skills were applied throughout.",Annotate custom medical imaging QA dataset for domain-specific evaluation.,,,2026-01-07 08:18:44.000000+00:00
+775,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,08-01-2026,blocked,"Attempted to query and analyze benchmark results using SQL.
+
+Work Done:
+  - Set up SQLite DB with results table (model, dataset, question_id, pred, gt, correct)
+  - Loaded all benchmark results: ~4,800 rows total
+
+Issues Encountered:
+  - SQL is a weak area — struggled with window functions and GROUP BY aggregations
+  - Spent ~4 hours on queries that should have taken ~30 minutes
+  - Switched to pandas for all analysis after mentor suggested it
+
+Final analysis completed correctly using pandas. SQL gap identified for future improvement.",Build medical imaging QA annotation interface using Label Studio.,SQL proficiency gap significantly slowed analysis phase. Pandas used as workaround — all results are correct but workflow was inefficient.,,2026-01-08 05:39:52.000000+00:00
+1059,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,08-01-2026,on_track,"Tested 3 chunk sizes (256, 512, 1024 tokens) across 3 embedding models.
+
+Chunking Experiment Results (MRR on 100 queries):
+  Chunk Size    all-MiniLM-L6   bge-base   e5-large
+  256 tokens:   0.71            0.73       0.76
+  512 tokens:   0.74            0.77       0.81  ← best overall
+  1024 tokens:  0.69            0.72       0.78
+
+Best Configuration: 512 tokens, 64 overlap, e5-large embeddings → MRR: 0.81
+
+SQL used to log all 9 experiment configurations and query results for systematic comparison. Python batch evaluation scripts ran all configs automatically.",Integrate cross-encoder re-ranker on top of best retrieval configuration.,,,2026-01-08 07:40:08.000000+00:00
+609,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,08-01-2026,on_track,"Completed LoRA finetuning (rank 16, 3 epochs) on Qwen3-4B.
+
+Training Summary:
+  - Epoch 1 loss: 0.91 → Epoch 3 loss: 0.14
+  - Best validation loss: 0.17 at step 1,800
+  - Total training time: ~2.5 hours on A100
+
+Parameter Efficiency:
+  - Trainable params: 4.2M / 3.8B total (0.11%)
+  - LoRA applied to: q_proj, v_proj, k_proj, o_proj
+
+Experiment tracked end-to-end using Weights & Biases. PyTorch and Model Finetuning skills were essential throughout.",Run inference on test set and compute evaluation metrics using LLM-as-judge.,,,2026-01-08 12:31:44.000000+00:00
+1146,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,09-01-2026,on_track,"Applied comprehensive data preprocessing to normalize inputs across benchmarks.
+
+Preprocessing Steps:
+  1. Resized all images to model-native resolution (448x448 for InternVL2, 336x336 for LLaVA)
+  2. Normalized pixel values using per-model mean/std
+  3. Fixed 312 corrupted image entries in TextVQA (replaced with placeholder)
+  4. Standardized answer format: stripped punctuation, lowercased for exact-match scoring
+  5. Removed 88 ambiguous questions with multiple valid answers
+
+Data Preprocessing and Computer Vision skills were central to ensuring evaluation consistency across models.",Run inference on cleaned TextVQA and ChartQA splits for all 3 models.,,,2026-01-09 08:20:51.000000+00:00
+1062,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,12-01-2026,on_track,"Integrated ms-marco-MiniLM cross-encoder re-ranker into the pipeline.
+
+Re-ranking Results:
+  Without re-ranker:  NDCG@10 = 0.61,  MRR = 0.81
+  With re-ranker:     NDCG@10 = 0.74,  MRR = 0.88
+  Improvement:        +0.13 NDCG@10,   +0.07 MRR
+
+Latency Impact:
+  - Retrieval:   45ms
+  - Re-ranking:  380ms  ← bottleneck
+  - Total:       ~430ms per query
+
+API Development skills used to wrap retriever + re-ranker as a unified REST endpoint with a clean request/response schema.",Benchmark against hybrid BM25 + dense retrieval to assess whether combining lexical signals helps.,,,2026-01-12 08:06:43.000000+00:00
+1153,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,12-01-2026,on_track,"Evaluated all 3 VLMs on TextVQA and ChartQA.
+
+TextVQA Results (1,000 samples):
+  Model           Accuracy   OCR-heavy Q Accuracy
+  CLIP:           38.1%      21.4%
+  LLaVA-1.5-7B:  63.9%      54.2%
+  InternVL2-8B:  72.3%      67.8%  ← best
+
+ChartQA Results (800 samples):
+  Model           Accuracy
+  CLIP:           29.3%
+  LLaVA-1.5-7B:  64.7%
+  InternVL2-8B:  79.1%  ← best
+
+All runs tracked via Weights & Biases with reproducible configs. Weights & Biases and Evaluation & Benchmarking skills were applied throughout.",Annotate custom medical imaging QA dataset for domain-specific evaluation.,,,2026-01-12 10:02:36.000000+00:00
+978,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,13-01-2026,on_track,"Evaluated XLM-R on TyDi QA. Conducted deep linguistic analysis of performance gaps.
+
+TyDi QA Results (F1 Score):
+  Language    F1      Notes
+  English:    72.4    Strong performance
+  Hindi:      61.8    Moderate — good transliteration handling
+  Bengali:    51.8    Notable drop — complex inflection patterns
+  Tamil:      44.2    Significant gap — agglutinative morphology
+  Marathi:    47.6    Similar to Bengali
+  Telugu:     43.1    Lowest — limited pretraining data
+
+Root Cause Analysis:
+  Low-resource languages (Tamil, Telugu, Marathi) have 10–50x less pretraining data in XLM-R compared to English. Morphological complexity compounds this.
+
+Multilingual AI and NLP skills applied. Findings documented in detailed analysis report.",Collect additional training data for Tamil and Telugu to address data scarcity.,,,2026-01-13 06:59:34.000000+00:00
+1068,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,13-01-2026,at_risk,"Attempted to finetune the embedding model (e5-large) for domain adaptation.
+
+Work Done:
+  - Prepared contrastive training pairs using query-document relevance labels
+  - Set up training loop using sentence-transformers library
+
+Issues Encountered:
+  - Gradient accumulation configuration caused NaN losses after ~200 steps
+  - Attempted 3 different learning rate schedules — all diverged
+  - Model Finetuning is not a strong skill area — required mentor assistance to identify the issue (incorrect normalization before contrastive loss)
+
+Current Status: Training loop fixed with mentor help. Re-running now.",Complete finetuning run and evaluate domain-adapted embedding model vs off-the-shelf e5-large.,Model finetuning training loop had gradient accumulation and normalization issues. Required mentor guidance to resolve — added 2 days to timeline.,,2026-01-13 07:32:13.000000+00:00
+1158,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,13-01-2026,blocked,"Attempted to query and analyze benchmark results using SQL.
+
+Work Done:
+  - Set up SQLite DB with results table (model, dataset, question_id, pred, gt, correct)
+  - Loaded all benchmark results: ~4,800 rows total
+
+Issues Encountered:
+  - SQL is a weak area — struggled with window functions and GROUP BY aggregations
+  - Spent ~4 hours on queries that should have taken ~30 minutes
+  - Switched to pandas for all analysis after mentor suggested it
+
+Final analysis completed correctly using pandas. SQL gap identified for future improvement.",Build medical imaging QA annotation interface using Label Studio.,SQL proficiency gap significantly slowed analysis phase. Pandas used as workaround — all results are correct but workflow was inefficient.,,2026-01-13 10:49:51.000000+00:00
+872,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,14-01-2026,on_track,"Transcribed full 5.1-hour dataset using Whisper-large-v3.
+
+Transcription Summary:
+  - Total utterances transcribed: 1,312
+  - Transcription time: ~4 hours on A100 GPU
+  - Word Error Rate (WER) on 100-sample validation set: 8.2%
+
+Quality Breakdown by Difficulty:
+  Clear speech:      WER = 4.1%
+  Accented speech:   WER = 11.3%
+  Background noise:  WER = 18.7%
+
+HuggingFace pipeline used for Whisper inference. Git used to track all transcription scripts and dataset manifests. Speech Processing and HuggingFace skills applied throughout.",Add speaker diarization labels and identify noisy recordings for cleanup.,,,2026-01-14 09:01:04.000000+00:00
+1071,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,14-01-2026,on_track,"Ran hybrid retrieval experiments combining BM25 (lexical) and dense embeddings.
+
+Hybrid Retrieval Results:
+  Method              NDCG@10   MRR    Latency
+  Dense only:         0.74      0.88   430ms
+  BM25 only:          0.61      0.76   35ms
+  Hybrid (α=0.3):     0.79      0.91   465ms  ← best
+  Hybrid (α=0.5):     0.77      0.90   465ms
+  Hybrid (α=0.7):     0.75      0.89   465ms
+
+Optimal α=0.3 (30% BM25, 70% dense). Hybrid outperforms dense-only by +0.05 NDCG@10.
+
+Information Retrieval and SQL skills applied to systematically track and query all experiment results.",Implement HyDE (Hypothetical Document Embeddings) for query expansion.,,,2026-01-14 11:13:02.000000+00:00
+779,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,15-01-2026,at_risk,"Annotated 200 medical imaging QA pairs using Label Studio.
+
+Annotation Process:
+  - 3 annotators reviewed chest X-ray and MRI images
+  - Each image annotated with: question, correct answer, difficulty (easy/medium/hard)
+  - Inter-annotator agreement: Cohen's κ = 0.81 (strong agreement)
+  - Final dataset: 200 QA pairs — 80 easy, 78 medium, 42 hard
+
+Label distribution:
+  - Diagnostic questions: 112 (56%)
+  - Anatomical localization: 61 (30.5%)
+  - Severity assessment: 27 (13.5%)
+
+Documentation skills applied to write clear annotation guidelines shared with all annotators.","Run InternVL2, LLaVA-1.5, and GPT-4V on medical QA dataset.",,,2026-01-15 09:04:20.000000+00:00
+878,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,15-01-2026,on_track,"Added speaker diarization using pyannote.audio and conducted noise quality analysis.
+
+Diarization Results:
+  - Diarization Error Rate (DER): 11.4%
+  - Missed speech: 4.2%, False alarm: 3.1%, Speaker confusion: 4.1%
+
+Noise Analysis:
+  - Computed SNR for all 1,312 utterances using audiomentations
+  - Distribution: SNR < 20dB: 38 utterances (flagged), 20–35dB: 891, > 35dB: 383
+
+Speaker Identity:
+  - 28 unique speakers correctly identified in 89% of segments
+  - 11% of segments had ambiguous speaker boundaries (sent for manual review)
+
+Teamwork skills applied to coordinate manual review with 2 co-annotators.",Remove or re-record the 38 flagged low-SNR utterances.,,,2026-01-15 10:38:28.000000+00:00
+684,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,16-01-2026,on_track,"Integrated ms-marco-MiniLM cross-encoder re-ranker into the pipeline.
+
+Re-ranking Results:
+  Without re-ranker:  NDCG@10 = 0.61,  MRR = 0.81
+  With re-ranker:     NDCG@10 = 0.74,  MRR = 0.88
+  Improvement:        +0.13 NDCG@10,   +0.07 MRR
+
+Latency Impact:
+  - Retrieval:   45ms
+  - Re-ranking:  380ms  ← bottleneck
+  - Total:       ~430ms per query
+
+API Development skills used to wrap retriever + re-ranker as a unified REST endpoint with a clean request/response schema.",Benchmark against hybrid BM25 + dense retrieval to assess whether combining lexical signals helps.,,,2026-01-16 04:26:15.000000+00:00
+1164,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,16-01-2026,on_track,"Annotated 200 medical imaging QA pairs using Label Studio.
+
+Annotation Process:
+  - 3 annotators reviewed chest X-ray and MRI images
+  - Each image annotated with: question, correct answer, difficulty (easy/medium/hard)
+  - Inter-annotator agreement: Cohen's κ = 0.81 (strong agreement)
+  - Final dataset: 200 QA pairs — 80 easy, 78 medium, 42 hard
+
+Label distribution:
+  - Diagnostic questions: 112 (56%)
+  - Anatomical localization: 61 (30.5%)
+  - Severity assessment: 27 (13.5%)
+
+Documentation skills applied to write clear annotation guidelines shared with all annotators.","Run InternVL2, LLaVA-1.5, and GPT-4V on medical QA dataset.",,,2026-01-16 04:59:40.000000+00:00
+885,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,16-01-2026,at_risk,"Attempted to build a REST API for exposing dataset access to downstream teams.
+
+Work Done:
+  - Built basic FastAPI endpoint with /transcripts and /audio routes
+  - Single-item queries work correctly
+  - Tested with Postman — response format is clean
+
+Issues Encountered:
+  - API Development is not a strong skill area
+  - Batch query endpoint returns inconsistent results when requesting >100 items
+  - Error handling for missing audio files raises unhandled 500 errors
+  - Authentication (API key) not yet implemented
+
+Flagged for mentor review before exposing to other teams.",Fix batch query endpoint and add proper error handling based on mentor feedback.,API Development gaps led to incomplete batch endpoint and missing error handling. Pending mentor review before the API can be used by downstream teams.,,2026-01-16 07:00:34.000000+00:00
+984,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,16-01-2026,at_risk,"Attempted to build REST API for serving multilingual model predictions.
+
+Work Done:
+  - Basic FastAPI endpoint with /predict route accepting language + text input
+  - Single-query inference works correctly for all 6 languages
+  - Added basic input validation for language code
+
+Issues Encountered:
+  - API Development is not a strong area
+  - Batch inference endpoint returns results in wrong order when processing async requests
+  - No rate limiting or request queuing implemented
+  - Documentation for API consumers is incomplete
+
+Raised with mentor — recommended using a message queue (RabbitMQ) which is also unfamiliar territory.",Implement basic request queuing with guidance from arjun who has stronger API skills.,API Development gaps: batch endpoint has ordering bug and lacks rate limiting. Coordinating with arjun for guidance on implementation.,,2026-01-16 07:14:32.000000+00:00
+786,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,19-01-2026,at_risk,"Ran all 3 VLMs on medical imaging QA. Applied image augmentation on hard cases.
+
+Medical QA Results (200 samples):
+  Model           Overall   Easy    Medium  Hard
+  GPT-4V:         68.0%     89.2%   66.7%   31.0%
+  InternVL2-8B:   54.0%     79.5%   52.6%   14.3%
+  LLaVA-1.5-7B:  41.0%     67.8%   38.5%    4.8%
+
+Augmentation Experiment (zoom-in on hard cases):
+  InternVL2 hard accuracy:  14.3% → 28.6% with zoom augmentation
+
+PyTorch transforms and Computer Vision skills applied to implement and test augmentation pipeline.",Fine-tune InternVL2 on annotated medical data using LoRA.,,,2026-01-19 05:55:04.000000+00:00
+888,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,19-01-2026,on_track,"Cleaned low-quality recordings and finalized dataset.
+
+Cleanup Summary:
+  - 14 utterances removed entirely (SNR < 15dB, irreparable)
+  - 24 utterances re-recorded by volunteers
+  - Final dataset: 1,322 utterances, 5.3 hours
+
+Re-recording Quality:
+  - All 24 re-recorded samples pass SNR > 25dB threshold
+  - WER on re-recorded samples: 5.8% (better than original set)
+
+Final Dataset Split:
+  - Train: 1,057 utterances (4.24 hours)
+  - Validation: 133 utterances (0.53 hours)
+  - Test: 132 utterances (0.53 hours)
+
+Data Preprocessing and Statistical Analysis applied to validate quality thresholds.",Export dataset in HuggingFace datasets format and push to private Hub repository.,,,2026-01-19 08:12:29.000000+00:00
+611,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,19-01-2026,on_track,"Designed and executed evaluation pipeline using GPT-5.1 as LLM judge.
+
+Evaluation Metrics (across 50 test samples):
+  - Correctness:          4.62 / 5.0
+  - Pedagogical Quality:  3.88 / 5.0
+  - Feedback Relevance:   4.04 / 5.0
+  - Next-Step Clarity:    3.91 / 5.0
+  - Error Recovery:       3.24 / 5.0  ← weakest dimension
+
+Key Finding:
+  Error recovery is consistently the lowest-scoring dimension. The model often fails to guide students back when they submit a wrong intermediate step.
+
+Evaluation & Benchmarking and Prompt Engineering skills were applied to design the judge rubric.",Revise system prompt to improve error recovery behavior. Add few-shot examples targeting recovery steps.,,,2026-01-19 09:01:09.000000+00:00
+892,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,20-01-2026,on_track,"Exported dataset to HuggingFace datasets format and pushed to private Hub repo.
+
+Dataset Card:
+  - Name: hindi-asr-v1
+  - Size: 5.3 hours, 1,322 utterances
+  - Languages: Hindi (hi)
+  - Features: audio (16kHz WAV), transcript (str), speaker_id (str), split (str)
+
+HuggingFace DatasetDict structure:
+  DatasetDict({
+    train: Dataset(1057 rows),
+    validation: Dataset(133 rows),
+    test: Dataset(132 rows)
+  })
+
+Pushed to private Hub under org namespace. HuggingFace and Git skills were applied to version the dataset correctly with a data card.",Fine-tune Whisper-small on the dataset and evaluate WER improvement.,,,2026-01-20 09:10:08.000000+00:00
+618,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,21-01-2026,on_track,"Revised system prompt using Chain-of-Thought structure with few-shot examples for error recovery.
+
+Changes Made:
+  1. Added explicit ""If student is wrong, do NOT reveal the answer — ask a guiding question"" instruction
+  2. Included 3 few-shot examples demonstrating correct recovery behavior
+  3. Reformatted next-step instructions to end with a question
+
+Re-evaluation Results (50 samples):
+  - Error Recovery:       3.24 → 3.91  (+0.67 improvement)
+  - Next-Step Clarity:    3.91 → 4.12  (+0.21 improvement)
+  - Correctness:          4.62 → 4.71  (+0.09 improvement)
+
+Prompt Engineering skills were central to this iteration.",Test updated prompt configuration on Qwen3.5-2B and compare with 0.8B variant.,,,2026-01-21 05:51:59.000000+00:00
+1166,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,21-01-2026,on_track,"Ran all 3 VLMs on medical imaging QA. Applied image augmentation on hard cases.
+
+Medical QA Results (200 samples):
+  Model           Overall   Easy    Medium  Hard
+  GPT-4V:         68.0%     89.2%   66.7%   31.0%
+  InternVL2-8B:   54.0%     79.5%   52.6%   14.3%
+  LLaVA-1.5-7B:  41.0%     67.8%   38.5%    4.8%
+
+Augmentation Experiment (zoom-in on hard cases):
+  InternVL2 hard accuracy:  14.3% → 28.6% with zoom augmentation
+
+PyTorch transforms and Computer Vision skills applied to implement and test augmentation pipeline.",Fine-tune InternVL2 on annotated medical data using LoRA.,,,2026-01-21 08:49:30.000000+00:00
+990,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,21-01-2026,on_track,"Scraped and cleaned 10,000 sentences each for Tamil and Telugu.
+
+Data Sources:
+  - Tamil: CC-100 Tamil subset, IndicCorp v2 Tamil, scraped news from dinamani.com
+  - Telugu: CC-100 Telugu subset, IndicCorp v2 Telugu, scraped from eenadu.net
+
+Preprocessing:
+  1. Language identification using fastText — removed 412 non-Tamil and 389 non-Telugu sentences
+  2. Deduplication using MinHash LSH — removed 8.3% duplicates
+  3. Script normalization — standardized Unicode decomposition
+  4. Sentence length filtering: kept 10–80 tokens
+
+Final counts: Tamil 9,847, Telugu 9,721 clean sentences.
+
+Python and Data Preprocessing skills applied throughout.",Finetune XLM-R with augmented Tamil and Telugu data.,,,2026-01-21 11:47:49.000000+00:00
+793,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,22-01-2026,blocked,"Attempted to containerize evaluation pipeline using Docker for reproducibility.
+
+Work Done:
+  - Created Dockerfile with CUDA 12.1 base image
+  - Installed PyTorch, HuggingFace, and evaluation dependencies
+  - Container runs inference correctly on single GPU
+
+Issues Encountered:
+  - Multi-GPU setup inside Docker required nvidia-docker configuration — not familiar with this
+  - Spent significant time troubleshooting device mapping issues
+  - Resolved with help from karan who has stronger Docker skills
+
+Docker is a skill area identified for further development. Final image works but is not optimized.",Optimize Docker image and document deployment process.,Docker multi-GPU configuration inside containers is not a familiar area — required peer assistance from karan to resolve nvidia-docker issues.,,2026-01-22 11:32:39.000000+00:00
+1173,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,22-01-2026,at_risk,"Attempted to containerize evaluation pipeline using Docker for reproducibility.
+
+Work Done:
+  - Created Dockerfile with CUDA 12.1 base image
+  - Installed PyTorch, HuggingFace, and evaluation dependencies
+  - Container runs inference correctly on single GPU
+
+Issues Encountered:
+  - Multi-GPU setup inside Docker required nvidia-docker configuration — not familiar with this
+  - Spent significant time troubleshooting device mapping issues
+  - Resolved with help from karan who has stronger Docker skills
+
+Docker is a skill area identified for further development. Final image works but is not optimized.",Optimize Docker image and document deployment process.,Docker multi-GPU configuration inside containers is not a familiar area — required peer assistance from karan to resolve nvidia-docker issues.,,2026-01-22 12:52:10.000000+00:00
+687,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,23-01-2026,at_risk,"Attempted to finetune the embedding model (e5-large) for domain adaptation.
+
+Work Done:
+  - Prepared contrastive training pairs using query-document relevance labels
+  - Set up training loop using sentence-transformers library
+
+Issues Encountered:
+  - Gradient accumulation configuration caused NaN losses after ~200 steps
+  - Attempted 3 different learning rate schedules — all diverged
+  - Model Finetuning is not a strong skill area — required mentor assistance to identify the issue (incorrect normalization before contrastive loss)
+
+Current Status: Training loop fixed with mentor help. Re-running now.",Complete finetuning run and evaluate domain-adapted embedding model vs off-the-shelf e5-large.,Model finetuning training loop had gradient accumulation and normalization issues. Required mentor guidance to resolve — added 2 days to timeline.,,2026-01-23 05:55:21.000000+00:00
+620,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,23-01-2026,at_risk,"Attempted to containerize the finetuning pipeline using Docker.
+
+Work Done:
+  - Created a Dockerfile based on pytorch/pytorch:2.2.0-cuda12.1
+  - Installed all Python dependencies via requirements.txt
+  - Pipeline runs inside container but image size is 8.4GB (unoptimized)
+
+Issues Encountered:
+  - Limited Docker experience caused delays — spent ~3 hours debugging PATH and CUDA driver compatibility
+  - Final image works but multi-stage build not implemented
+  - Push to registry failed due to authentication issues (resolved with help from karan)
+
+Docker is a skill area that needs further development.",Optimize Docker image using multi-stage build. Coordinate with karan for registry access.,Docker setup took significantly longer than expected due to limited prior experience with containerization and CUDA driver conflicts.,,2026-01-23 06:35:46.000000+00:00
+898,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,23-01-2026,on_track,"Finetuned Whisper-small on Hindi ASR dataset.
+
+Finetuning Configuration:
+  - Model: openai/whisper-small (244M parameters)
+  - Epochs: 5, batch size: 16, learning rate: 1e-5
+  - Data augmentation: speed perturbation (0.9x, 1.1x), SpecAugment
+
+Results:
+  Before finetuning WER: 22.1%
+  After finetuning WER:  14.7%  (-7.4% absolute improvement)
+
+WER by difficulty:
+  Clear speech:     22.1% → 9.8%
+  Accented speech:  24.3% → 16.2%
+  Background noise: 31.4% → 22.1%
+
+Speech Processing, HuggingFace, and Model Finetuning skills applied. Tracked training via Weights & Biases.",Finetune Whisper-medium and compare results across model sizes.,,,2026-01-23 10:33:53.000000+00:00
+795,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,23-01-2026,on_track,"Finetuned InternVL2-8B on medical imaging QA dataset using LoRA.
+
+Finetuning Configuration:
+  - LoRA rank: 16, alpha: 32, dropout: 0.05
+  - Target modules: q_proj, v_proj, k_proj
+  - Learning rate: 1e-4 with cosine decay
+  - Epochs: 3, batch size: 4
+
+Results (held-out test set, 40 samples):
+  Before finetuning:  54.0% overall,  14.3% hard
+  After finetuning:   71.5% overall,  42.9% hard  ← significant improvement
+
+Weights & Biases tracked all runs. PyTorch and Model Finetuning skills applied throughout.",Prepare final benchmark report covering all datasets and models.,,,2026-01-23 11:30:33.000000+00:00
+1177,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,23-01-2026,on_track,"Finetuned InternVL2-8B on medical imaging QA dataset using LoRA.
+
+Finetuning Configuration:
+  - LoRA rank: 16, alpha: 32, dropout: 0.05
+  - Target modules: q_proj, v_proj, k_proj
+  - Learning rate: 1e-4 with cosine decay
+  - Epochs: 3, batch size: 4
+
+Results (held-out test set, 40 samples):
+  Before finetuning:  54.0% overall,  14.3% hard
+  After finetuning:   71.5% overall,  42.9% hard  ← significant improvement
+
+Weights & Biases tracked all runs. PyTorch and Model Finetuning skills applied throughout.",Prepare final benchmark report covering all datasets and models.,,,2026-01-23 11:41:16.000000+00:00
+801,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,26-01-2026,on_track,"Completed comprehensive benchmark report covering all evaluation phases.
+
+Report Contents:
+  1. Baseline comparison across VQA-v2, TextVQA, ChartQA
+  2. Medical imaging QA — annotation methodology and results
+  3. Augmentation experiments and findings
+  4. InternVL2 finetuning results and improvement analysis
+  5. Latency and GPU memory profiling per model
+
+Key Recommendation:
+  InternVL2-8B is the best open-source VLM for document and chart understanding tasks. For medical imaging, domain finetuning provides a 17.5% absolute accuracy gain.
+
+Documentation and Communication skills used to produce a clear, well-structured report presented to the team.",Present findings and take up next milestone as guided.,,,2026-01-26 10:04:14.000000+00:00
+900,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,26-01-2026,on_track,"Finetuned Whisper-medium and ran cross-model comparison.
+
+Whisper-medium Results:
+  - Before finetuning WER: 18.4%
+  - After finetuning WER:  9.8%  (-8.6% absolute improvement)
+
+Model Size Comparison (after finetuning):
+  Model           WER     Params   GPU Memory   Inference Speed
+  Whisper-tiny:   28.4%   39M      ~0.5GB       1.2x faster
+  Whisper-small:  14.7%   244M     ~1.2GB       baseline
+  Whisper-medium: 9.8%    769M     ~3.1GB       1.8x slower
+
+Communication skills used to present results clearly in team meeting. Team decided to use Whisper-medium for downstream tasks.",Evaluate on out-of-domain phone-call recordings to assess domain gap.,,,2026-01-26 10:25:56.000000+00:00
+1078,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,26-01-2026,on_track,"Dockerized the full RAG pipeline for reproducible deployment.
+
+Docker Setup:
+  - Base image: python:3.11-slim
+  - Multi-stage build: builder stage installs deps, final stage copies only what's needed
+  - Final image size: 1.2GB (down from 4.8GB with naive single-stage build)
+  - Environment variables passed via .env file — no secrets in image
+
+Services Containerized:
+  - Embedding service (FastAPI)
+  - FAISS retrieval service (FastAPI)
+  - Re-ranker service (FastAPI)
+  - Orchestration layer (LangChain)
+
+Docker and API Development skills were both applied extensively here. All services communicate via internal Docker network.",Deploy to staging and run end-to-end latency and throughput benchmarks.,,,2026-01-26 12:23:00.000000+00:00
+694,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,27-01-2026,on_track,"Ran hybrid retrieval experiments combining BM25 (lexical) and dense embeddings.
+
+Hybrid Retrieval Results:
+  Method              NDCG@10   MRR    Latency
+  Dense only:         0.74      0.88   430ms
+  BM25 only:          0.61      0.76   35ms
+  Hybrid (α=0.3):     0.79      0.91   465ms  ← best
+  Hybrid (α=0.5):     0.77      0.90   465ms
+  Hybrid (α=0.7):     0.75      0.89   465ms
+
+Optimal α=0.3 (30% BM25, 70% dense). Hybrid outperforms dense-only by +0.05 NDCG@10.
+
+Information Retrieval and SQL skills applied to systematically track and query all experiment results.",Implement HyDE (Hypothetical Document Embeddings) for query expansion.,,,2026-01-27 06:47:46.000000+00:00
+994,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,27-01-2026,on_track,"Finetuned XLM-R on augmented Tamil + Telugu data and ran cross-lingual transfer experiments.
+
+Finetuning Results:
+  Language    Before    After     Delta
+  Tamil F1:   44.2%     50.3%     +6.1%
+  Telugu F1:  43.1%     47.9%     +4.8%
+
+Cross-Lingual Transfer (zero-shot, trained on Hindi only):
+  Marathi F1 (zero-shot):  63.1%
+  Marathi F1 (1k samples): 71.4%  (+8.3% from minimal supervision)
+
+Key Finding:
+  Hindi → Marathi transfer is highly effective due to script (Devanagari) and lexical overlap. Tamil → Telugu transfer is weaker (F1=48.2%) due to dialect divergence.
+
+Multilingual AI and Statistical Analysis skills applied to design and interpret transfer experiments.",Explore code-switched Hinglish data and its impact on model performance.,,,2026-01-27 07:25:38.000000+00:00
+906,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,27-01-2026,on_track,"Evaluated Whisper-medium on out-of-domain phone-call recordings.
+
+Phone-Call Test Set:
+  - 200 utterances from customer support calls (8kHz, upsampled to 16kHz)
+  - Different acoustic conditions from training data
+
+Out-of-Domain Results:
+  Whisper-medium (finetuned):  WER = 21.3%  ← significant domain gap
+  Whisper-medium (base):       WER = 24.8%
+  Whisper-large-v3 (base):     WER = 17.1%
+
+Root Cause:
+  Training data was clean studio speech — model has not seen telephony channel noise, codec artifacts, or cross-talk.
+
+Teamwork and Problem Solving skills applied to design the domain adaptation strategy with the team.",Collect and annotate phone-quality samples for domain adaptation finetuning.,,,2026-01-27 11:56:50.000000+00:00
+624,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,28-01-2026,on_track,"Ran comparative analysis between finetuned model and base Qwen3-4B across all evaluation dimensions.
+
+Results Summary:
+                      Base    Finetuned   Delta
+  Correctness:        3.91    4.71        +0.80
+  Pedagogical Qual:   3.44    3.88        +0.44
+  Feedback Relevance: 3.72    4.04        +0.32
+  Next-Step Clarity:  3.61    4.12        +0.51
+  Error Recovery:     2.81    3.91        +1.10  ← largest gain
+
+Statistical Analysis:
+  - Paired t-test across all metrics: p < 0.01 (statistically significant)
+  - Effect size (Cohen's d): 0.82 — large effect
+
+Statistical Analysis and Evaluation & Benchmarking skills were both applied here.",Prepare final evaluation report with visualizations for team review.,,,2026-01-28 06:11:42.000000+00:00
+1182,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,28-01-2026,on_track,"Completed comprehensive benchmark report covering all evaluation phases.
+
+Report Contents:
+  1. Baseline comparison across VQA-v2, TextVQA, ChartQA
+  2. Medical imaging QA — annotation methodology and results
+  3. Augmentation experiments and findings
+  4. InternVL2 finetuning results and improvement analysis
+  5. Latency and GPU memory profiling per model
+
+Key Recommendation:
+  InternVL2-8B is the best open-source VLM for document and chart understanding tasks. For medical imaging, domain finetuning provides a 17.5% absolute accuracy gain.
+
+Documentation and Communication skills used to produce a clear, well-structured report presented to the team.",Present findings and take up next milestone as guided.,,,2026-01-28 08:03:07.000000+00:00
+908,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,29-01-2026,on_track,"Ran domain adaptation finetuning using 500 annotated phone-quality utterances.
+
+Domain Adaptation Setup:
+  - Started from finetuned Whisper-medium checkpoint
+  - 500 phone-quality utterances added to training mix (20% of total)
+  - 3 additional epochs with learning rate 5e-6
+
+Results After Domain Adaptation:
+  Phone-call WER:  21.3% → 14.9%  (-6.4% absolute improvement)
+  In-domain WER:   9.8% → 10.2%   (+0.4% regression — minor)
+
+Trade-off Analysis:
+  Domain adaptation improves phone-call WER significantly with only a minor regression on the original test set. Net improvement justifies the adaptation.
+
+Statistical Analysis applied to assess the significance of WER improvements (paired bootstrap, p < 0.01).",Document final model comparison and submit project report.,,,2026-01-29 05:05:27.000000+00:00
+997,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,29-01-2026,on_track,"Collected and analyzed 2,000 Hinglish (Hindi-English code-switched) samples.
+
+Data Collection:
+  - Scraped from Twitter/X using Hindi + English hashtags common in Indian discourse
+  - Annotated with: language per token (Hindi/English/Other), sentiment, topic
+
+Baseline Model Performance on Hinglish:
+  Model           F1 (NLI)   Notes
+  XLM-R:          39.2%      Poor — code-switching not in pretraining distribution
+  mBERT:          36.8%      Slightly worse
+  GPT-5.1 (few-shot): 58.4%  Strong, handles switching well in context
+
+Key Challenge:
+  Standard tokenizers split Hinglish words incorrectly — ""karna"" (करना) often tokenized as Hindi UNK when written in Latin script.
+
+Communication skills used to present these findings clearly to the team and get alignment on next steps.",Build code-switching classifier and fine-tune for Hinglish NLU.,,,2026-01-29 09:36:08.000000+00:00
+803,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,29-01-2026,on_track,"Ran failure analysis on InternVL2 vs GPT-4V performance gap on medical QA.
+
+Analysis Methodology:
+  - Manually reviewed 46 questions where GPT-4V was correct and InternVL2 was wrong
+  - Categorized failure types
+
+Failure Mode Distribution:
+  Type                              Count   % of failures
+  Small object / lesion detection:  18      39.1%
+  OCR in dense scan text:           12      26.1%
+  Severity scale interpretation:     9      19.6%
+  Multi-image reasoning:             7      15.2%
+
+Key Insight:
+  InternVL2 struggles most with small-scale spatial reasoning in dense medical images. This is an architecture-level limitation not addressable by prompt tuning alone.
+
+Problem Solving skills applied to design a systematic failure categorization framework.",Incorporate failure analysis findings into final report.,,,2026-01-29 10:02:15.000000+00:00
+807,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,30-01-2026,on_track,"Set up VLM evaluation framework for CLIP, LLaVA-1.5-7B, and InternVL2-8B.
+
+Environment:
+  - GPU: 2x A100 40GB (multi-GPU inference via accelerate)
+  - Datasets loaded via HuggingFace datasets: VQA-v2, TextVQA, ChartQA
+
+Baseline Results on VQA-v2 (2,000-sample subset):
+  Model           Accuracy   Latency/sample
+  CLIP:           54.2%      120ms
+  LLaVA-1.5-7B:  63.8%      340ms
+  InternVL2-8B:  71.4%      510ms
+
+Computer Vision and PyTorch skills were essential for setting up multi-GPU inference correctly.",Expand evaluation to TextVQA and ChartQA benchmarks.,,,2026-01-30 10:46:27.000000+00:00
+916,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,02-02-2026,on_track,"Collected and organized 5 hours of Hindi speech audio from volunteer contributors.
+
+Collection Summary:
+  - Total volunteers: 28
+  - Total audio collected: 5.1 hours (18,360 seconds)
+  - Recording format: 16kHz, mono, WAV
+  - Age distribution: 18–24 (61%), 25–35 (31%), 35+ (8%)
+
+Preprocessing Applied:
+  - Normalized all audio to -23 LUFS using ffmpeg
+  - Segmented long recordings into utterances using Voice Activity Detection (pyannote)
+  - Resulting segments: 1,312 utterances, avg duration 14.0s
+
+Data Preprocessing and Speech Processing skills were central to this phase. All scripts version-controlled via Git.",Transcribe all audio using Whisper-large-v3 and validate transcript quality.,,,2026-02-02 07:09:03.000000+00:00
+1081,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,02-02-2026,on_track,"Profiled full pipeline latency across all components under load.
+
+Latency Breakdown (p50 / p95 across 500 queries):
+  Component           p50     p95
+  Embedding:          118ms   145ms
+  FAISS Retrieval:    43ms    61ms
+  Re-ranking:         92ms    128ms  (after MiniLM switch)
+  LLM Generation:     620ms   890ms  ← dominant cost
+  Total E2E:          873ms   1,224ms
+
+Throughput: 41 queries/min under single-replica setup.
+
+Git used for version control of all pipeline configs. Statistical Analysis applied to compute percentile latencies from 500-query load test logs.",Optimize LLM generation latency via speculative decoding or caching frequent queries.,,,2026-02-02 08:03:16.000000+00:00
+1088,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,03-02-2026,on_track,"Implemented query result caching using Redis to reduce redundant LLM calls.
+
+Cache Design:
+  - Key: SHA256 hash of (query + top-5 retrieved doc IDs)
+  - TTL: 1 hour
+  - Cache hit rate on test set: 34% (many repeated queries in evaluation)
+
+Performance with Caching:
+  - Cache hit latency:  ~18ms
+  - Cache miss latency: ~873ms (no change)
+  - Effective avg latency (with 34% hit rate): ~593ms
+
+Information Retrieval, API Development, and Problem Solving skills applied to design the caching layer correctly without stale result issues.","Run full 1,000-query benchmark and prepare final pipeline report.",,,2026-02-03 04:07:48.000000+00:00
+999,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,03-02-2026,at_risk,"Attempted to set up Docker environment for reproducible multilingual evaluation.
+
+Work Done:
+  - Created Dockerfile with Python 3.11 + HuggingFace + multilingual dependencies
+  - Container runs XNLI evaluation correctly for English and Hindi
+
+Issues Encountered:
+  - Docker is a weak skill area — spent significant time on permission and volume mount issues
+  - Non-Latin script rendering inside container logs was corrupted (encoding issue)
+  - Multi-language font support required additional packages not in base image
+
+Resolved encoding issue with help from team documentation. Container is functional but not optimized.",Finalize Docker image and document setup process for team replication.,Docker is not a strong skill area — volume mount and encoding issues for non-Latin scripts caused significant delays.,,2026-02-03 04:42:47.000000+00:00
+699,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,03-02-2026,on_track,"Dockerized the full RAG pipeline for reproducible deployment.
+
+Docker Setup:
+  - Base image: python:3.11-slim
+  - Multi-stage build: builder stage installs deps, final stage copies only what's needed
+  - Final image size: 1.2GB (down from 4.8GB with naive single-stage build)
+  - Environment variables passed via .env file — no secrets in image
+
+Services Containerized:
+  - Embedding service (FastAPI)
+  - FAISS retrieval service (FastAPI)
+  - Re-ranker service (FastAPI)
+  - Orchestration layer (LangChain)
+
+Docker and API Development skills were both applied extensively here. All services communicate via internal Docker network.",Deploy to staging and run end-to-end latency and throughput benchmarks.,,,2026-02-03 06:41:33.000000+00:00
+1094,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,04-02-2026,on_track,"Completed full 1,000-query benchmark across all pipeline configurations.
+
+Final Benchmark Summary:
+  Configuration               NDCG@10   MRR    Avg Latency
+  Baseline dense:             0.61      0.74   430ms
+  + Re-ranker:                0.74      0.88   430ms
+  + Hybrid retrieval:         0.79      0.91   465ms
+  + Domain-adapted embedding: 0.83      0.93   465ms
+  + Redis caching (34% hit):  0.83      0.93   310ms  ← final config
+
+Documented all configurations, hyperparameters, and results in a structured report. Shared with team for review.",Start multi-document QA experiments as next milestone.,,,2026-02-04 04:46:14.000000+00:00
+626,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,04-02-2026,on_track,"Prepared final evaluation report covering the full LLM finetuning and evaluation cycle.
+
+Report Structure:
+  1. Dataset preparation methodology
+  2. Finetuning configuration and training curves
+  3. Base vs. finetuned comparison across all 5 metrics
+  4. Error recovery improvement analysis
+  5. Prompt engineering iterations and their impact
+
+Visualizations Included:
+  - Training loss curves (3 epochs)
+  - Metric-wise bar charts (base vs. finetuned)
+  - Score distribution histograms per difficulty level
+
+Documentation skills were applied to produce a thorough, well-structured report. Report shared with team and received positive feedback.",Present findings to team. Begin next project milestone as guided.,,,2026-02-04 07:04:49.000000+00:00
+1002,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,04-02-2026,on_track,"Built and evaluated code-switching classifier for Hinglish text.
+
+Model Architecture:
+  - Base: XLM-R-base with classification head
+  - Task: Token-level language identification (Hindi / English / Mixed / Other)
+  - Training data: 1,600 annotated Hinglish samples (80/20 split)
+
+Results:
+  Token-level accuracy:  84.2%
+  Per-class F1:
+    Hindi tokens:    88.1%
+    English tokens:  91.3%
+    Mixed tokens:    61.4%  ← hardest (portmanteau / code-mixed morphology)
+
+Documentation of classifier methodology and results written clearly for team review.",Use classifier outputs as features for downstream Hinglish NLU fine-tuning.,,,2026-02-04 07:59:34.000000+00:00
+812,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,04-02-2026,on_track,"Applied comprehensive data preprocessing to normalize inputs across benchmarks.
+
+Preprocessing Steps:
+  1. Resized all images to model-native resolution (448x448 for InternVL2, 336x336 for LLaVA)
+  2. Normalized pixel values using per-model mean/std
+  3. Fixed 312 corrupted image entries in TextVQA (replaced with placeholder)
+  4. Standardized answer format: stripped punctuation, lowercased for exact-match scoring
+  5. Removed 88 ambiguous questions with multiple valid answers
+
+Data Preprocessing and Computer Vision skills were central to ensuring evaluation consistency across models.",Run inference on cleaned TextVQA and ChartQA splits for all 3 models.,,,2026-02-04 10:24:20.000000+00:00
+817,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,05-02-2026,on_track,"Evaluated all 3 VLMs on TextVQA and ChartQA.
+
+TextVQA Results (1,000 samples):
+  Model           Accuracy   OCR-heavy Q Accuracy
+  CLIP:           38.1%      21.4%
+  LLaVA-1.5-7B:  63.9%      54.2%
+  InternVL2-8B:  72.3%      67.8%  ← best
+
+ChartQA Results (800 samples):
+  Model           Accuracy
+  CLIP:           29.3%
+  LLaVA-1.5-7B:  64.7%
+  InternVL2-8B:  79.1%  ← best
+
+All runs tracked via Weights & Biases with reproducible configs. Weights & Biases and Evaluation & Benchmarking skills were applied throughout.",Annotate custom medical imaging QA dataset for domain-specific evaluation.,,,2026-02-05 05:02:30.000000+00:00
+706,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,05-02-2026,on_track,"Profiled full pipeline latency across all components under load.
+
+Latency Breakdown (p50 / p95 across 500 queries):
+  Component           p50     p95
+  Embedding:          118ms   145ms
+  FAISS Retrieval:    43ms    61ms
+  Re-ranking:         92ms    128ms  (after MiniLM switch)
+  LLM Generation:     620ms   890ms  ← dominant cost
+  Total E2E:          873ms   1,224ms
+
+Throughput: 41 queries/min under single-replica setup.
+
+Git used for version control of all pipeline configs. Statistical Analysis applied to compute percentile latencies from 500-query load test logs.",Optimize LLM generation latency via speculative decoding or caching frequent queries.,,,2026-02-05 07:57:53.000000+00:00
+1100,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,05-02-2026,at_risk,"Attempted to improve re-ranker quality using Prompt Engineering for LLM-based re-ranking.
+
+Work Done:
+  - Replaced cross-encoder re-ranker with LLM-based relevance scoring
+  - Tried 4 different prompt formats to elicit relevance scores
+
+Results:
+  - LLM re-ranker NDCG@10: 0.80 (vs cross-encoder 0.83)
+  - LLM re-ranker latency: 1,100ms (vs cross-encoder 92ms)
+  - Prompt Engineering is not a strong area — all 4 prompt variants produced inconsistent scoring formats (mixed numeric/text outputs)
+
+Decision: Retained cross-encoder re-ranker. LLM-based re-ranking is not suitable here without more prompt iteration.",Document findings and proceed to multi-document QA milestone.,Prompt Engineering gaps led to inconsistent LLM re-ranker outputs — abandoned in favour of cross-encoder after 4 failed prompt variants.,,2026-02-05 11:32:34.000000+00:00
+1008,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,05-02-2026,on_track,"Completed final multilingual NLP evaluation report.
+
+Report Sections:
+  1. Baseline benchmark: mBERT vs XLM-R across 6 languages (XNLI, TyDi QA)
+  2. Low-resource data augmentation: Tamil and Telugu improvement analysis
+  3. Cross-lingual transfer experiments: Hindi → Marathi, Tamil → Telugu
+  4. Hinglish code-switching: dataset, challenges, classifier results
+  5. Recommendations for production multilingual deployment
+
+Key Recommendations:
+  - Use XLM-R for all 6 supported languages
+  - For Marathi: leverage Hindi transfer + 1k labeled samples
+  - For Hinglish: use code-switching classifier as preprocessing step
+
+Communication, Documentation, and Statistical Analysis skills all demonstrated in this final deliverable.",Present findings to team and take up next milestone as guided.,,,2026-02-05 12:18:07.000000+00:00
+921,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,05-02-2026,on_track,"Transcribed full 5.1-hour dataset using Whisper-large-v3.
+
+Transcription Summary:
+  - Total utterances transcribed: 1,312
+  - Transcription time: ~4 hours on A100 GPU
+  - Word Error Rate (WER) on 100-sample validation set: 8.2%
+
+Quality Breakdown by Difficulty:
+  Clear speech:      WER = 4.1%
+  Accented speech:   WER = 11.3%
+  Background noise:  WER = 18.7%
+
+HuggingFace pipeline used for Whisper inference. Git used to track all transcription scripts and dataset manifests. Speech Processing and HuggingFace skills applied throughout.",Add speaker diarization labels and identify noisy recordings for cleanup.,,,2026-02-05 12:39:31.000000+00:00
+926,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,06-02-2026,on_track,"Added speaker diarization using pyannote.audio and conducted noise quality analysis.
+
+Diarization Results:
+  - Diarization Error Rate (DER): 11.4%
+  - Missed speech: 4.2%, False alarm: 3.1%, Speaker confusion: 4.1%
+
+Noise Analysis:
+  - Computed SNR for all 1,312 utterances using audiomentations
+  - Distribution: SNR < 20dB: 38 utterances (flagged), 20–35dB: 891, > 35dB: 383
+
+Speaker Identity:
+  - 28 unique speakers correctly identified in 89% of segments
+  - 11% of segments had ambiguous speaker boundaries (sent for manual review)
+
+Teamwork skills applied to coordinate manual review with 2 co-annotators.",Remove or re-record the 38 flagged low-SNR utterances.,,,2026-02-06 09:09:17.000000+00:00
+820,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,06-02-2026,at_risk,"Attempted to query and analyze benchmark results using SQL.
+
+Work Done:
+  - Set up SQLite DB with results table (model, dataset, question_id, pred, gt, correct)
+  - Loaded all benchmark results: ~4,800 rows total
+
+Issues Encountered:
+  - SQL is a weak area — struggled with window functions and GROUP BY aggregations
+  - Spent ~4 hours on queries that should have taken ~30 minutes
+  - Switched to pandas for all analysis after mentor suggested it
+
+Final analysis completed correctly using pandas. SQL gap identified for future improvement.",Build medical imaging QA annotation interface using Label Studio.,SQL proficiency gap significantly slowed analysis phase. Pandas used as workaround — all results are correct but workflow was inefficient.,,2026-02-06 09:45:38.000000+00:00
+1186,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,06-02-2026,on_track,"Ran failure analysis on InternVL2 vs GPT-4V performance gap on medical QA.
+
+Analysis Methodology:
+  - Manually reviewed 46 questions where GPT-4V was correct and InternVL2 was wrong
+  - Categorized failure types
+
+Failure Mode Distribution:
+  Type                              Count   % of failures
+  Small object / lesion detection:  18      39.1%
+  OCR in dense scan text:           12      26.1%
+  Severity scale interpretation:     9      19.6%
+  Multi-image reasoning:             7      15.2%
+
+Key Insight:
+  InternVL2 struggles most with small-scale spatial reasoning in dense medical images. This is an architecture-level limitation not addressable by prompt tuning alone.
+
+Problem Solving skills applied to design a systematic failure categorization framework.",Incorporate failure analysis findings into final report.,,,2026-02-06 11:20:52.000000+00:00
+629,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,09-02-2026,on_track,"Evaluated Qwen3.5-0.8B vs Qwen3.5-2B on the finetuned tutoring pipeline.
+
+Model Comparison (50 questions each):
+                        0.8B    2B
+  Correctness:          4.11    4.71    (+0.60)
+  Pedagogical Quality:  3.52    3.88    (+0.36)
+  Feedback Relevance:   3.78    4.04    (+0.26)
+  Next-Step Clarity:    3.61    4.12    (+0.51)
+  Error Recovery:       3.08    3.91    (+0.83)
+
+Key Observations:
+  - 2B model outperforms 0.8B across all dimensions
+  - Largest gap is in Error Recovery — 0.8B frequently produces vague recovery hints
+  - 0.8B response latency: ~4s per step vs ~9s for 2B
+
+HuggingFace and Evaluation & Benchmarking skills used throughout.",Test INT8 quantized version of 2B model and analyze latency vs quality trade-off.,,,2026-02-09 05:07:35.000000+00:00
+823,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,09-02-2026,on_track,"Annotated 200 medical imaging QA pairs using Label Studio.
+
+Annotation Process:
+  - 3 annotators reviewed chest X-ray and MRI images
+  - Each image annotated with: question, correct answer, difficulty (easy/medium/hard)
+  - Inter-annotator agreement: Cohen's κ = 0.81 (strong agreement)
+  - Final dataset: 200 QA pairs — 80 easy, 78 medium, 42 hard
+
+Label distribution:
+  - Diagnostic questions: 112 (56%)
+  - Anatomical localization: 61 (30.5%)
+  - Severity assessment: 27 (13.5%)
+
+Documentation skills applied to write clear annotation guidelines shared with all annotators.","Run InternVL2, LLaVA-1.5, and GPT-4V on medical QA dataset.",,,2026-02-09 08:15:30.000000+00:00
+710,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,09-02-2026,on_track,"Implemented query result caching using Redis to reduce redundant LLM calls.
+
+Cache Design:
+  - Key: SHA256 hash of (query + top-5 retrieved doc IDs)
+  - TTL: 1 hour
+  - Cache hit rate on test set: 34% (many repeated queries in evaluation)
+
+Performance with Caching:
+  - Cache hit latency:  ~18ms
+  - Cache miss latency: ~873ms (no change)
+  - Effective avg latency (with 34% hit rate): ~593ms
+
+Information Retrieval, API Development, and Problem Solving skills applied to design the caching layer correctly without stale result issues.","Run full 1,000-query benchmark and prepare final pipeline report.",,,2026-02-09 09:38:49.000000+00:00
+929,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,10-02-2026,at_risk,"Attempted to build a REST API for exposing dataset access to downstream teams.
+
+Work Done:
+  - Built basic FastAPI endpoint with /transcripts and /audio routes
+  - Single-item queries work correctly
+  - Tested with Postman — response format is clean
+
+Issues Encountered:
+  - API Development is not a strong skill area
+  - Batch query endpoint returns inconsistent results when requesting >100 items
+  - Error handling for missing audio files raises unhandled 500 errors
+  - Authentication (API key) not yet implemented
+
+Flagged for mentor review before exposing to other teams.",Fix batch query endpoint and add proper error handling based on mentor feedback.,API Development gaps led to incomplete batch endpoint and missing error handling. Pending mentor review before the API can be used by downstream teams.,,2026-02-10 08:19:40.000000+00:00
+634,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,10-02-2026,on_track,"Analyzed INT8 quantized Qwen3.5-2B vs full-precision model on tutoring pipeline.
+
+Performance Comparison:
+                        2B Full   2B INT8   Delta
+  Correctness:          4.71      4.62      -0.09
+  Pedagogical Quality:  3.88      3.80      -0.08
+  Feedback Relevance:   4.04      3.95      -0.09
+  Next-Step Clarity:    4.12      3.87      -0.25  ← largest drop
+  Error Recovery:       3.91      3.57      -0.34  ← largest drop
+
+Latency Comparison:
+  - Full 2B:  ~9s per step
+  - INT8 2B:  ~2.1s per step (4.3x faster)
+
+Root Cause Analysis:
+  INT8 quantization compresses small weight magnitudes — reduces overconfidence but degrades recovery reasoning in complex multi-step scenarios.
+
+Model Finetuning and Statistical Analysis skills applied for root-cause analysis.",Document final findings and submit full project report.,,,2026-02-10 10:12:21.000000+00:00
+1106,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,11-02-2026,on_track,"Built baseline RAG pipeline using LangChain and FAISS.
+
+Architecture:
+  - Embedding model: sentence-transformers/all-MiniLM-L6-v2
+  - Vector store: FAISS with L2 index
+  - LLM: Qwen3-8B served via local vLLM endpoint
+  - Retriever: top-k=5 dense retrieval
+
+Baseline Retrieval Accuracy (100 test queries):
+  - Top-1 accuracy: 72.3%
+  - Top-5 accuracy: 89.1%
+  - Mean Reciprocal Rank (MRR): 0.74
+
+LangChain orchestration and API Development skills were central to this setup. The vLLM serving endpoint was designed for low-latency batch inference.",Experiment with different chunk sizes and embedding models to improve retrieval accuracy.,,,2026-02-11 04:40:23.000000+00:00
+1011,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,11-02-2026,on_track,"Set up multilingual NLU evaluation pipeline for 6 languages: English, Hindi, Bengali, Tamil, Marathi, Telugu.
+
+Framework Design:
+  - Unified inference wrapper for mBERT and XLM-R using HuggingFace Transformers
+  - Standardized input/output schema for XNLI and TyDi QA tasks
+  - Evaluation runner with per-language, per-difficulty breakdowns
+
+Token Budget Analysis:
+  - Average token lengths differ significantly across scripts:
+    English: 18.4 tokens/sentence
+    Hindi:   22.1 tokens/sentence
+    Tamil:   28.3 tokens/sentence  ← highest, due to agglutinative morphology
+
+NLP and Python skills were central to the pipeline design. Documentation written for all components.",Run XNLI benchmark on mBERT and XLM-R across all 6 languages.,,,2026-02-11 10:39:41.000000+00:00
+828,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,11-02-2026,on_track,"Ran all 3 VLMs on medical imaging QA. Applied image augmentation on hard cases.
+
+Medical QA Results (200 samples):
+  Model           Overall   Easy    Medium  Hard
+  GPT-4V:         68.0%     89.2%   66.7%   31.0%
+  InternVL2-8B:   54.0%     79.5%   52.6%   14.3%
+  LLaVA-1.5-7B:  41.0%     67.8%   38.5%    4.8%
+
+Augmentation Experiment (zoom-in on hard cases):
+  InternVL2 hard accuracy:  14.3% → 28.6% with zoom augmentation
+
+PyTorch transforms and Computer Vision skills applied to implement and test augmentation pipeline.",Fine-tune InternVL2 on annotated medical data using LoRA.,,,2026-02-11 10:52:33.000000+00:00
+936,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,12-02-2026,on_track,"Cleaned low-quality recordings and finalized dataset.
+
+Cleanup Summary:
+  - 14 utterances removed entirely (SNR < 15dB, irreparable)
+  - 24 utterances re-recorded by volunteers
+  - Final dataset: 1,322 utterances, 5.3 hours
+
+Re-recording Quality:
+  - All 24 re-recorded samples pass SNR > 25dB threshold
+  - WER on re-recorded samples: 5.8% (better than original set)
+
+Final Dataset Split:
+  - Train: 1,057 utterances (4.24 hours)
+  - Validation: 133 utterances (0.53 hours)
+  - Test: 132 utterances (0.53 hours)
+
+Data Preprocessing and Statistical Analysis applied to validate quality thresholds.",Export dataset in HuggingFace datasets format and push to private Hub repository.,,,2026-02-12 05:42:04.000000+00:00
+835,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,12-02-2026,blocked,"Attempted to containerize evaluation pipeline using Docker for reproducibility.
+
+Work Done:
+  - Created Dockerfile with CUDA 12.1 base image
+  - Installed PyTorch, HuggingFace, and evaluation dependencies
+  - Container runs inference correctly on single GPU
+
+Issues Encountered:
+  - Multi-GPU setup inside Docker required nvidia-docker configuration — not familiar with this
+  - Spent significant time troubleshooting device mapping issues
+  - Resolved with help from karan who has stronger Docker skills
+
+Docker is a skill area identified for further development. Final image works but is not optimized.",Optimize Docker image and document deployment process.,Docker multi-GPU configuration inside containers is not a familiar area — required peer assistance from karan to resolve nvidia-docker issues.,,2026-02-12 06:20:12.000000+00:00
+1016,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,12-02-2026,on_track,"Evaluated mBERT and XLM-R on XNLI across all 6 languages.
+
+XNLI Results (Accuracy):
+  Language    mBERT   XLM-R   Delta
+  English:    82.1%   86.3%   +4.2%
+  Hindi:      74.3%   79.8%   +5.5%
+  Bengali:    69.2%   74.1%   +4.9%
+  Tamil:      61.4%   67.2%   +5.8%
+  Marathi:    63.8%   69.1%   +5.3%
+  Telugu:     60.1%   65.9%   +5.8%
+  Average:    68.5%   73.7%   +5.2%
+
+Statistical Analysis: Paired t-test across all language pairs — XLM-R improvement is significant (p < 0.01) for all 6 languages. Effect size (Cohen's d) ranges from 0.41 to 0.67.
+
+Statistical Analysis and Multilingual AI skills were both applied here.",Run TyDi QA evaluation. Investigate why low-resource languages show larger gaps.,,,2026-02-12 07:41:13.000000+00:00
+1109,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,12-02-2026,on_track,"Tested 3 chunk sizes (256, 512, 1024 tokens) across 3 embedding models.
+
+Chunking Experiment Results (MRR on 100 queries):
+  Chunk Size    all-MiniLM-L6   bge-base   e5-large
+  256 tokens:   0.71            0.73       0.76
+  512 tokens:   0.74            0.77       0.81  ← best overall
+  1024 tokens:  0.69            0.72       0.78
+
+Best Configuration: 512 tokens, 64 overlap, e5-large embeddings → MRR: 0.81
+
+SQL used to log all 9 experiment configurations and query results for systematic comparison. Python batch evaluation scripts ran all configs automatically.",Integrate cross-encoder re-ranker on top of best retrieval configuration.,,,2026-02-12 11:40:41.000000+00:00
+1020,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,13-02-2026,on_track,"Evaluated XLM-R on TyDi QA. Conducted deep linguistic analysis of performance gaps.
+
+TyDi QA Results (F1 Score):
+  Language    F1      Notes
+  English:    72.4    Strong performance
+  Hindi:      61.8    Moderate — good transliteration handling
+  Bengali:    51.8    Notable drop — complex inflection patterns
+  Tamil:      44.2    Significant gap — agglutinative morphology
+  Marathi:    47.6    Similar to Bengali
+  Telugu:     43.1    Lowest — limited pretraining data
+
+Root Cause Analysis:
+  Low-resource languages (Tamil, Telugu, Marathi) have 10–50x less pretraining data in XLM-R compared to English. Morphological complexity compounds this.
+
+Multilingual AI and NLP skills applied. Findings documented in detailed analysis report.",Collect additional training data for Tamil and Telugu to address data scarcity.,,,2026-02-13 10:14:31.000000+00:00
+637,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,13-02-2026,on_track,"Set up the finetuning environment on Colab using HuggingFace Transformers and PEFT library.
+
+Environment Setup:
+  - Installed compatible versions: transformers==4.40, peft==0.10, bitsandbytes==0.43
+  - Verified A100 GPU availability and tested with a dummy forward pass
+  - Confirmed LoRA adapter attaches correctly to attention layers
+
+Smoke Test Results:
+  - Batch size 4, sequence length 512 — no OOM errors
+  - Training step time: ~1.2s per step on A100
+
+HuggingFace and PyTorch skills were central to this setup.",Prepare the dataset in instruction-tuning format and begin LoRA finetuning with rank 16.,,,2026-02-13 10:18:23.000000+00:00
+1025,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,16-02-2026,at_risk,"Attempted to build REST API for serving multilingual model predictions.
+
+Work Done:
+  - Basic FastAPI endpoint with /predict route accepting language + text input
+  - Single-query inference works correctly for all 6 languages
+  - Added basic input validation for language code
+
+Issues Encountered:
+  - API Development is not a strong area
+  - Batch inference endpoint returns results in wrong order when processing async requests
+  - No rate limiting or request queuing implemented
+  - Documentation for API consumers is incomplete
+
+Raised with mentor — recommended using a message queue (RabbitMQ) which is also unfamiliar territory.",Implement basic request queuing with guidance from arjun who has stronger API skills.,API Development gaps: batch endpoint has ordering bug and lacks rate limiting. Coordinating with arjun for guidance on implementation.,,2026-02-16 04:34:54.000000+00:00
+1194,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,16-02-2026,on_track,"Set up VLM evaluation framework for CLIP, LLaVA-1.5-7B, and InternVL2-8B.
+
+Environment:
+  - GPU: 2x A100 40GB (multi-GPU inference via accelerate)
+  - Datasets loaded via HuggingFace datasets: VQA-v2, TextVQA, ChartQA
+
+Baseline Results on VQA-v2 (2,000-sample subset):
+  Model           Accuracy   Latency/sample
+  CLIP:           54.2%      120ms
+  LLaVA-1.5-7B:  63.8%      340ms
+  InternVL2-8B:  71.4%      510ms
+
+Computer Vision and PyTorch skills were essential for setting up multi-GPU inference correctly.",Expand evaluation to TextVQA and ChartQA benchmarks.,,,2026-02-16 06:19:19.000000+00:00
+1114,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,16-02-2026,on_track,"Integrated ms-marco-MiniLM cross-encoder re-ranker into the pipeline.
+
+Re-ranking Results:
+  Without re-ranker:  NDCG@10 = 0.61,  MRR = 0.81
+  With re-ranker:     NDCG@10 = 0.74,  MRR = 0.88
+  Improvement:        +0.13 NDCG@10,   +0.07 MRR
+
+Latency Impact:
+  - Retrieval:   45ms
+  - Re-ranking:  380ms  ← bottleneck
+  - Total:       ~430ms per query
+
+API Development skills used to wrap retriever + re-ranker as a unified REST endpoint with a clean request/response schema.",Benchmark against hybrid BM25 + dense retrieval to assess whether combining lexical signals helps.,,,2026-02-16 07:28:50.000000+00:00
+715,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,16-02-2026,on_track,"Completed full 1,000-query benchmark across all pipeline configurations.
+
+Final Benchmark Summary:
+  Configuration               NDCG@10   MRR    Avg Latency
+  Baseline dense:             0.61      0.74   430ms
+  + Re-ranker:                0.74      0.88   430ms
+  + Hybrid retrieval:         0.79      0.91   465ms
+  + Domain-adapted embedding: 0.83      0.93   465ms
+  + Redis caching (34% hit):  0.83      0.93   310ms  ← final config
+
+Documented all configurations, hyperparameters, and results in a structured report. Shared with team for review.",Start multi-document QA experiments as next milestone.,,,2026-02-16 11:19:08.000000+00:00
+839,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,17-02-2026,on_track,"Finetuned InternVL2-8B on medical imaging QA dataset using LoRA.
+
+Finetuning Configuration:
+  - LoRA rank: 16, alpha: 32, dropout: 0.05
+  - Target modules: q_proj, v_proj, k_proj
+  - Learning rate: 1e-4 with cosine decay
+  - Epochs: 3, batch size: 4
+
+Results (held-out test set, 40 samples):
+  Before finetuning:  54.0% overall,  14.3% hard
+  After finetuning:   71.5% overall,  42.9% hard  ← significant improvement
+
+Weights & Biases tracked all runs. PyTorch and Model Finetuning skills applied throughout.",Prepare final benchmark report covering all datasets and models.,,,2026-02-17 06:05:35.000000+00:00
+721,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,17-02-2026,at_risk,"Attempted to improve re-ranker quality using Prompt Engineering for LLM-based re-ranking.
+
+Work Done:
+  - Replaced cross-encoder re-ranker with LLM-based relevance scoring
+  - Tried 4 different prompt formats to elicit relevance scores
+
+Results:
+  - LLM re-ranker NDCG@10: 0.80 (vs cross-encoder 0.83)
+  - LLM re-ranker latency: 1,100ms (vs cross-encoder 92ms)
+  - Prompt Engineering is not a strong area — all 4 prompt variants produced inconsistent scoring formats (mixed numeric/text outputs)
+
+Decision: Retained cross-encoder re-ranker. LLM-based re-ranking is not suitable here without more prompt iteration.",Document findings and proceed to multi-document QA milestone.,Prompt Engineering gaps led to inconsistent LLM re-ranker outputs — abandoned in favour of cross-encoder after 4 failed prompt variants.,,2026-02-17 06:49:46.000000+00:00
+939,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,17-02-2026,on_track,"Exported dataset to HuggingFace datasets format and pushed to private Hub repo.
+
+Dataset Card:
+  - Name: hindi-asr-v1
+  - Size: 5.3 hours, 1,322 utterances
+  - Languages: Hindi (hi)
+  - Features: audio (16kHz WAV), transcript (str), speaker_id (str), split (str)
+
+HuggingFace DatasetDict structure:
+  DatasetDict({
+    train: Dataset(1057 rows),
+    validation: Dataset(133 rows),
+    test: Dataset(132 rows)
+  })
+
+Pushed to private Hub under org namespace. HuggingFace and Git skills were applied to version the dataset correctly with a data card.",Fine-tune Whisper-small on the dataset and evaluate WER improvement.,,,2026-02-17 07:23:17.000000+00:00
+642,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,17-02-2026,on_track,"Converted raw kinematics QA dataset into instruction-tuning format.
+
+Data Preprocessing Steps:
+  1. Removed 214 duplicate entries from 3,800 raw samples
+  2. Filtered out samples with incomplete answer fields (removed 87 samples)
+  3. Normalized question formatting — stripped HTML tags, fixed encoding issues
+  4. Applied train/val/test split: 80/10/10 → 3,199 / 400 / 100 samples
+
+Instruction Format Used:
+  System: ""You are a step-by-step physics tutor...""
+  User: ""<problem_statement>""
+  Assistant: ""<step_wise_solution>""
+
+Python scripting skills were applied throughout the pipeline.","Begin LoRA finetuning run with rank 16, learning rate 2e-4, 3 epochs.",,,2026-02-17 09:31:24.000000+00:00
+1117,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,17-02-2026,blocked,"Attempted to finetune the embedding model (e5-large) for domain adaptation.
+
+Work Done:
+  - Prepared contrastive training pairs using query-document relevance labels
+  - Set up training loop using sentence-transformers library
+
+Issues Encountered:
+  - Gradient accumulation configuration caused NaN losses after ~200 steps
+  - Attempted 3 different learning rate schedules — all diverged
+  - Model Finetuning is not a strong skill area — required mentor assistance to identify the issue (incorrect normalization before contrastive loss)
+
+Current Status: Training loop fixed with mentor help. Re-running now.",Complete finetuning run and evaluate domain-adapted embedding model vs off-the-shelf e5-large.,Model finetuning training loop had gradient accumulation and normalization issues. Required mentor guidance to resolve — added 2 days to timeline.,,2026-02-17 11:53:14.000000+00:00
+646,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,18-02-2026,on_track,"Completed LoRA finetuning (rank 16, 3 epochs) on Qwen3-4B.
+
+Training Summary:
+  - Epoch 1 loss: 0.91 → Epoch 3 loss: 0.14
+  - Best validation loss: 0.17 at step 1,800
+  - Total training time: ~2.5 hours on A100
+
+Parameter Efficiency:
+  - Trainable params: 4.2M / 3.8B total (0.11%)
+  - LoRA applied to: q_proj, v_proj, k_proj, o_proj
+
+Experiment tracked end-to-end using Weights & Biases. PyTorch and Model Finetuning skills were essential throughout.",Run inference on test set and compute evaluation metrics using LLM-as-judge.,,,2026-02-18 05:10:45.000000+00:00
+723,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,18-02-2026,on_track,"Built baseline RAG pipeline using LangChain and FAISS.
+
+Architecture:
+  - Embedding model: sentence-transformers/all-MiniLM-L6-v2
+  - Vector store: FAISS with L2 index
+  - LLM: Qwen3-8B served via local vLLM endpoint
+  - Retriever: top-k=5 dense retrieval
+
+Baseline Retrieval Accuracy (100 test queries):
+  - Top-1 accuracy: 72.3%
+  - Top-5 accuracy: 89.1%
+  - Mean Reciprocal Rank (MRR): 0.74
+
+LangChain orchestration and API Development skills were central to this setup. The vLLM serving endpoint was designed for low-latency batch inference.",Experiment with different chunk sizes and embedding models to improve retrieval accuracy.,,,2026-02-18 06:45:01.000000+00:00
+1030,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,19-02-2026,on_track,"Scraped and cleaned 10,000 sentences each for Tamil and Telugu.
+
+Data Sources:
+  - Tamil: CC-100 Tamil subset, IndicCorp v2 Tamil, scraped news from dinamani.com
+  - Telugu: CC-100 Telugu subset, IndicCorp v2 Telugu, scraped from eenadu.net
+
+Preprocessing:
+  1. Language identification using fastText — removed 412 non-Tamil and 389 non-Telugu sentences
+  2. Deduplication using MinHash LSH — removed 8.3% duplicates
+  3. Script normalization — standardized Unicode decomposition
+  4. Sentence length filtering: kept 10–80 tokens
+
+Final counts: Tamil 9,847, Telugu 9,721 clean sentences.
+
+Python and Data Preprocessing skills applied throughout.",Finetune XLM-R with augmented Tamil and Telugu data.,,,2026-02-19 09:37:28.000000+00:00
+653,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,19-02-2026,at_risk,"Designed and executed evaluation pipeline using GPT-5.1 as LLM judge.
+
+Evaluation Metrics (across 50 test samples):
+  - Correctness:          4.62 / 5.0
+  - Pedagogical Quality:  3.88 / 5.0
+  - Feedback Relevance:   4.04 / 5.0
+  - Next-Step Clarity:    3.91 / 5.0
+  - Error Recovery:       3.24 / 5.0  ← weakest dimension
+
+Key Finding:
+  Error recovery is consistently the lowest-scoring dimension. The model often fails to guide students back when they submit a wrong intermediate step.
+
+Evaluation & Benchmarking and Prompt Engineering skills were applied to design the judge rubric.",Revise system prompt to improve error recovery behavior. Add few-shot examples targeting recovery steps.,,,2026-02-19 11:00:31.000000+00:00
+1199,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,19-02-2026,on_track,"Applied comprehensive data preprocessing to normalize inputs across benchmarks.
+
+Preprocessing Steps:
+  1. Resized all images to model-native resolution (448x448 for InternVL2, 336x336 for LLaVA)
+  2. Normalized pixel values using per-model mean/std
+  3. Fixed 312 corrupted image entries in TextVQA (replaced with placeholder)
+  4. Standardized answer format: stripped punctuation, lowercased for exact-match scoring
+  5. Removed 88 ambiguous questions with multiple valid answers
+
+Data Preprocessing and Computer Vision skills were central to ensuring evaluation consistency across models.",Run inference on cleaned TextVQA and ChartQA splits for all 3 models.,,,2026-02-19 11:58:14.000000+00:00
+943,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,23-02-2026,on_track,"Finetuned Whisper-small on Hindi ASR dataset.
+
+Finetuning Configuration:
+  - Model: openai/whisper-small (244M parameters)
+  - Epochs: 5, batch size: 16, learning rate: 1e-5
+  - Data augmentation: speed perturbation (0.9x, 1.1x), SpecAugment
+
+Results:
+  Before finetuning WER: 22.1%
+  After finetuning WER:  14.7%  (-7.4% absolute improvement)
+
+WER by difficulty:
+  Clear speech:     22.1% → 9.8%
+  Accented speech:  24.3% → 16.2%
+  Background noise: 31.4% → 22.1%
+
+Speech Processing, HuggingFace, and Model Finetuning skills applied. Tracked training via Weights & Biases.",Finetune Whisper-medium and compare results across model sizes.,,,2026-02-23 04:37:31.000000+00:00
+1125,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,23-02-2026,on_track,"Ran hybrid retrieval experiments combining BM25 (lexical) and dense embeddings.
+
+Hybrid Retrieval Results:
+  Method              NDCG@10   MRR    Latency
+  Dense only:         0.74      0.88   430ms
+  BM25 only:          0.61      0.76   35ms
+  Hybrid (α=0.3):     0.79      0.91   465ms  ← best
+  Hybrid (α=0.5):     0.77      0.90   465ms
+  Hybrid (α=0.7):     0.75      0.89   465ms
+
+Optimal α=0.3 (30% BM25, 70% dense). Hybrid outperforms dense-only by +0.05 NDCG@10.
+
+Information Retrieval and SQL skills applied to systematically track and query all experiment results.",Implement HyDE (Hypothetical Document Embeddings) for query expansion.,,,2026-02-23 05:22:31.000000+00:00
+842,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,23-02-2026,on_track,"Completed comprehensive benchmark report covering all evaluation phases.
+
+Report Contents:
+  1. Baseline comparison across VQA-v2, TextVQA, ChartQA
+  2. Medical imaging QA — annotation methodology and results
+  3. Augmentation experiments and findings
+  4. InternVL2 finetuning results and improvement analysis
+  5. Latency and GPU memory profiling per model
+
+Key Recommendation:
+  InternVL2-8B is the best open-source VLM for document and chart understanding tasks. For medical imaging, domain finetuning provides a 17.5% absolute accuracy gain.
+
+Documentation and Communication skills used to produce a clear, well-structured report presented to the team.",Present findings and take up next milestone as guided.,,,2026-02-23 08:39:24.000000+00:00
+849,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,24-02-2026,on_track,"Ran failure analysis on InternVL2 vs GPT-4V performance gap on medical QA.
+
+Analysis Methodology:
+  - Manually reviewed 46 questions where GPT-4V was correct and InternVL2 was wrong
+  - Categorized failure types
+
+Failure Mode Distribution:
+  Type                              Count   % of failures
+  Small object / lesion detection:  18      39.1%
+  OCR in dense scan text:           12      26.1%
+  Severity scale interpretation:     9      19.6%
+  Multi-image reasoning:             7      15.2%
+
+Key Insight:
+  InternVL2 struggles most with small-scale spatial reasoning in dense medical images. This is an architecture-level limitation not addressable by prompt tuning alone.
+
+Problem Solving skills applied to design a systematic failure categorization framework.",Incorporate failure analysis findings into final report.,,,2026-02-24 05:10:45.000000+00:00
+1038,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,24-02-2026,on_track,"Finetuned XLM-R on augmented Tamil + Telugu data and ran cross-lingual transfer experiments.
+
+Finetuning Results:
+  Language    Before    After     Delta
+  Tamil F1:   44.2%     50.3%     +6.1%
+  Telugu F1:  43.1%     47.9%     +4.8%
+
+Cross-Lingual Transfer (zero-shot, trained on Hindi only):
+  Marathi F1 (zero-shot):  63.1%
+  Marathi F1 (1k samples): 71.4%  (+8.3% from minimal supervision)
+
+Key Finding:
+  Hindi → Marathi transfer is highly effective due to script (Devanagari) and lexical overlap. Tamil → Telugu transfer is weaker (F1=48.2%) due to dialect divergence.
+
+Multilingual AI and Statistical Analysis skills applied to design and interpret transfer experiments.",Explore code-switched Hinglish data and its impact on model performance.,,,2026-02-24 06:46:14.000000+00:00
+727,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,24-02-2026,on_track,"Tested 3 chunk sizes (256, 512, 1024 tokens) across 3 embedding models.
+
+Chunking Experiment Results (MRR on 100 queries):
+  Chunk Size    all-MiniLM-L6   bge-base   e5-large
+  256 tokens:   0.71            0.73       0.76
+  512 tokens:   0.74            0.77       0.81  ← best overall
+  1024 tokens:  0.69            0.72       0.78
+
+Best Configuration: 512 tokens, 64 overlap, e5-large embeddings → MRR: 0.81
+
+SQL used to log all 9 experiment configurations and query results for systematic comparison. Python batch evaluation scripts ran all configs automatically.",Integrate cross-encoder re-ranker on top of best retrieval configuration.,,,2026-02-24 07:54:37.000000+00:00
+947,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,24-02-2026,on_track,"Finetuned Whisper-medium and ran cross-model comparison.
+
+Whisper-medium Results:
+  - Before finetuning WER: 18.4%
+  - After finetuning WER:  9.8%  (-8.6% absolute improvement)
+
+Model Size Comparison (after finetuning):
+  Model           WER     Params   GPU Memory   Inference Speed
+  Whisper-tiny:   28.4%   39M      ~0.5GB       1.2x faster
+  Whisper-small:  14.7%   244M     ~1.2GB       baseline
+  Whisper-medium: 9.8%    769M     ~3.1GB       1.8x slower
+
+Communication skills used to present results clearly in team meeting. Team decided to use Whisper-medium for downstream tasks.",Evaluate on out-of-domain phone-call recordings to assess domain gap.,,,2026-02-24 10:10:02.000000+00:00
+1201,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,24-02-2026,on_track,"Evaluated all 3 VLMs on TextVQA and ChartQA.
+
+TextVQA Results (1,000 samples):
+  Model           Accuracy   OCR-heavy Q Accuracy
+  CLIP:           38.1%      21.4%
+  LLaVA-1.5-7B:  63.9%      54.2%
+  InternVL2-8B:  72.3%      67.8%  ← best
+
+ChartQA Results (800 samples):
+  Model           Accuracy
+  CLIP:           29.3%
+  LLaVA-1.5-7B:  64.7%
+  InternVL2-8B:  79.1%  ← best
+
+All runs tracked via Weights & Biases with reproducible configs. Weights & Biases and Evaluation & Benchmarking skills were applied throughout.",Annotate custom medical imaging QA dataset for domain-specific evaluation.,,,2026-02-24 10:32:44.000000+00:00
+1203,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,25-02-2026,at_risk,"Attempted to query and analyze benchmark results using SQL.
+
+Work Done:
+  - Set up SQLite DB with results table (model, dataset, question_id, pred, gt, correct)
+  - Loaded all benchmark results: ~4,800 rows total
+
+Issues Encountered:
+  - SQL is a weak area — struggled with window functions and GROUP BY aggregations
+  - Spent ~4 hours on queries that should have taken ~30 minutes
+  - Switched to pandas for all analysis after mentor suggested it
+
+Final analysis completed correctly using pandas. SQL gap identified for future improvement.",Build medical imaging QA annotation interface using Label Studio.,SQL proficiency gap significantly slowed analysis phase. Pandas used as workaround — all results are correct but workflow was inefficient.,,2026-02-25 07:35:56.000000+00:00
+949,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,25-02-2026,on_track,"Evaluated Whisper-medium on out-of-domain phone-call recordings.
+
+Phone-Call Test Set:
+  - 200 utterances from customer support calls (8kHz, upsampled to 16kHz)
+  - Different acoustic conditions from training data
+
+Out-of-Domain Results:
+  Whisper-medium (finetuned):  WER = 21.3%  ← significant domain gap
+  Whisper-medium (base):       WER = 24.8%
+  Whisper-large-v3 (base):     WER = 17.1%
+
+Root Cause:
+  Training data was clean studio speech — model has not seen telephony channel noise, codec artifacts, or cross-talk.
+
+Teamwork and Problem Solving skills applied to design the domain adaptation strategy with the team.",Collect and annotate phone-quality samples for domain adaptation finetuning.,,,2026-02-25 09:34:16.000000+00:00
+1207,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,26-02-2026,on_track,"Annotated 200 medical imaging QA pairs using Label Studio.
+
+Annotation Process:
+  - 3 annotators reviewed chest X-ray and MRI images
+  - Each image annotated with: question, correct answer, difficulty (easy/medium/hard)
+  - Inter-annotator agreement: Cohen's κ = 0.81 (strong agreement)
+  - Final dataset: 200 QA pairs — 80 easy, 78 medium, 42 hard
+
+Label distribution:
+  - Diagnostic questions: 112 (56%)
+  - Anatomical localization: 61 (30.5%)
+  - Severity assessment: 27 (13.5%)
+
+Documentation skills applied to write clear annotation guidelines shared with all annotators.","Run InternVL2, LLaVA-1.5, and GPT-4V on medical QA dataset.",,,2026-02-26 04:31:40.000000+00:00
+1128,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,26-02-2026,on_track,"Dockerized the full RAG pipeline for reproducible deployment.
+
+Docker Setup:
+  - Base image: python:3.11-slim
+  - Multi-stage build: builder stage installs deps, final stage copies only what's needed
+  - Final image size: 1.2GB (down from 4.8GB with naive single-stage build)
+  - Environment variables passed via .env file — no secrets in image
+
+Services Containerized:
+  - Embedding service (FastAPI)
+  - FAISS retrieval service (FastAPI)
+  - Re-ranker service (FastAPI)
+  - Orchestration layer (LangChain)
+
+Docker and API Development skills were both applied extensively here. All services communicate via internal Docker network.",Deploy to staging and run end-to-end latency and throughput benchmarks.,,,2026-02-26 08:20:44.000000+00:00
+655,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,26-02-2026,on_track,"Revised system prompt using Chain-of-Thought structure with few-shot examples for error recovery.
+
+Changes Made:
+  1. Added explicit ""If student is wrong, do NOT reveal the answer — ask a guiding question"" instruction
+  2. Included 3 few-shot examples demonstrating correct recovery behavior
+  3. Reformatted next-step instructions to end with a question
+
+Re-evaluation Results (50 samples):
+  - Error Recovery:       3.24 → 3.91  (+0.67 improvement)
+  - Next-Step Clarity:    3.91 → 4.12  (+0.21 improvement)
+  - Correctness:          4.62 → 4.71  (+0.09 improvement)
+
+Prompt Engineering skills were central to this iteration.",Test updated prompt configuration on Qwen3.5-2B and compare with 0.8B variant.,,,2026-02-26 12:14:36.000000+00:00
+954,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,27-02-2026,on_track,"Ran domain adaptation finetuning using 500 annotated phone-quality utterances.
+
+Domain Adaptation Setup:
+  - Started from finetuned Whisper-medium checkpoint
+  - 500 phone-quality utterances added to training mix (20% of total)
+  - 3 additional epochs with learning rate 5e-6
+
+Results After Domain Adaptation:
+  Phone-call WER:  21.3% → 14.9%  (-6.4% absolute improvement)
+  In-domain WER:   9.8% → 10.2%   (+0.4% regression — minor)
+
+Trade-off Analysis:
+  Domain adaptation improves phone-call WER significantly with only a minor regression on the original test set. Net improvement justifies the adaptation.
+
+Statistical Analysis applied to assess the significance of WER improvements (paired bootstrap, p < 0.01).",Document final model comparison and submit project report.,,,2026-02-27 07:46:33.000000+00:00
+1211,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,27-02-2026,on_track,"Ran all 3 VLMs on medical imaging QA. Applied image augmentation on hard cases.
+
+Medical QA Results (200 samples):
+  Model           Overall   Easy    Medium  Hard
+  GPT-4V:         68.0%     89.2%   66.7%   31.0%
+  InternVL2-8B:   54.0%     79.5%   52.6%   14.3%
+  LLaVA-1.5-7B:  41.0%     67.8%   38.5%    4.8%
+
+Augmentation Experiment (zoom-in on hard cases):
+  InternVL2 hard accuracy:  14.3% → 28.6% with zoom augmentation
+
+PyTorch transforms and Computer Vision skills applied to implement and test augmentation pipeline.",Fine-tune InternVL2 on annotated medical data using LoRA.,,,2026-02-27 10:11:49.000000+00:00
+732,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,27-02-2026,on_track,"Integrated ms-marco-MiniLM cross-encoder re-ranker into the pipeline.
+
+Re-ranking Results:
+  Without re-ranker:  NDCG@10 = 0.61,  MRR = 0.81
+  With re-ranker:     NDCG@10 = 0.74,  MRR = 0.88
+  Improvement:        +0.13 NDCG@10,   +0.07 MRR
+
+Latency Impact:
+  - Retrieval:   45ms
+  - Re-ranking:  380ms  ← bottleneck
+  - Total:       ~430ms per query
+
+API Development skills used to wrap retriever + re-ranker as a unified REST endpoint with a clean request/response schema.",Benchmark against hybrid BM25 + dense retrieval to assess whether combining lexical signals helps.,,,2026-02-27 10:48:51.000000+00:00
+661,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,27-02-2026,at_risk,"Attempted to containerize the finetuning pipeline using Docker.
+
+Work Done:
+  - Created a Dockerfile based on pytorch/pytorch:2.2.0-cuda12.1
+  - Installed all Python dependencies via requirements.txt
+  - Pipeline runs inside container but image size is 8.4GB (unoptimized)
+
+Issues Encountered:
+  - Limited Docker experience caused delays — spent ~3 hours debugging PATH and CUDA driver compatibility
+  - Final image works but multi-stage build not implemented
+  - Push to registry failed due to authentication issues (resolved with help from karan)
+
+Docker is a skill area that needs further development.",Optimize Docker image using multi-stage build. Coordinate with karan for registry access.,Docker setup took significantly longer than expected due to limited prior experience with containerization and CUDA driver conflicts.,,2026-02-27 12:39:07.000000+00:00
+1213,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,02-03-2026,at_risk,"Attempted to containerize evaluation pipeline using Docker for reproducibility.
+
+Work Done:
+  - Created Dockerfile with CUDA 12.1 base image
+  - Installed PyTorch, HuggingFace, and evaluation dependencies
+  - Container runs inference correctly on single GPU
+
+Issues Encountered:
+  - Multi-GPU setup inside Docker required nvidia-docker configuration — not familiar with this
+  - Spent significant time troubleshooting device mapping issues
+  - Resolved with help from karan who has stronger Docker skills
+
+Docker is a skill area identified for further development. Final image works but is not optimized.",Optimize Docker image and document deployment process.,Docker multi-GPU configuration inside containers is not a familiar area — required peer assistance from karan to resolve nvidia-docker issues.,,2026-03-02 12:12:10.000000+00:00
+1132,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,03-03-2026,on_track,"Profiled full pipeline latency across all components under load.
+
+Latency Breakdown (p50 / p95 across 500 queries):
+  Component           p50     p95
+  Embedding:          118ms   145ms
+  FAISS Retrieval:    43ms    61ms
+  Re-ranking:         92ms    128ms  (after MiniLM switch)
+  LLM Generation:     620ms   890ms  ← dominant cost
+  Total E2E:          873ms   1,224ms
+
+Throughput: 41 queries/min under single-replica setup.
+
+Git used for version control of all pipeline configs. Statistical Analysis applied to compute percentile latencies from 500-query load test logs.",Optimize LLM generation latency via speculative decoding or caching frequent queries.,,,2026-03-03 04:29:11.000000+00:00
+735,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,03-03-2026,blocked,"Attempted to finetune the embedding model (e5-large) for domain adaptation.
+
+Work Done:
+  - Prepared contrastive training pairs using query-document relevance labels
+  - Set up training loop using sentence-transformers library
+
+Issues Encountered:
+  - Gradient accumulation configuration caused NaN losses after ~200 steps
+  - Attempted 3 different learning rate schedules — all diverged
+  - Model Finetuning is not a strong skill area — required mentor assistance to identify the issue (incorrect normalization before contrastive loss)
+
+Current Status: Training loop fixed with mentor help. Re-running now.",Complete finetuning run and evaluate domain-adapted embedding model vs off-the-shelf e5-large.,Model finetuning training loop had gradient accumulation and normalization issues. Required mentor guidance to resolve — added 2 days to timeline.,,2026-03-03 06:06:25.000000+00:00
+1215,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,03-03-2026,on_track,"Finetuned InternVL2-8B on medical imaging QA dataset using LoRA.
+
+Finetuning Configuration:
+  - LoRA rank: 16, alpha: 32, dropout: 0.05
+  - Target modules: q_proj, v_proj, k_proj
+  - Learning rate: 1e-4 with cosine decay
+  - Epochs: 3, batch size: 4
+
+Results (held-out test set, 40 samples):
+  Before finetuning:  54.0% overall,  14.3% hard
+  After finetuning:   71.5% overall,  42.9% hard  ← significant improvement
+
+Weights & Biases tracked all runs. PyTorch and Model Finetuning skills applied throughout.",Prepare final benchmark report covering all datasets and models.,,,2026-03-03 06:55:21.000000+00:00
+664,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,03-03-2026,on_track,"Ran comparative analysis between finetuned model and base Qwen3-4B across all evaluation dimensions.
+
+Results Summary:
+                      Base    Finetuned   Delta
+  Correctness:        3.91    4.71        +0.80
+  Pedagogical Qual:   3.44    3.88        +0.44
+  Feedback Relevance: 3.72    4.04        +0.32
+  Next-Step Clarity:  3.61    4.12        +0.51
+  Error Recovery:     2.81    3.91        +1.10  ← largest gain
+
+Statistical Analysis:
+  - Paired t-test across all metrics: p < 0.01 (statistically significant)
+  - Effect size (Cohen's d): 0.82 — large effect
+
+Statistical Analysis and Evaluation & Benchmarking skills were both applied here.",Prepare final evaluation report with visualizations for team review.,,,2026-03-03 09:53:59.000000+00:00
+959,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,04-03-2026,on_track,"Collected and organized 5 hours of Hindi speech audio from volunteer contributors.
+
+Collection Summary:
+  - Total volunteers: 28
+  - Total audio collected: 5.1 hours (18,360 seconds)
+  - Recording format: 16kHz, mono, WAV
+  - Age distribution: 18–24 (61%), 25–35 (31%), 35+ (8%)
+
+Preprocessing Applied:
+  - Normalized all audio to -23 LUFS using ffmpeg
+  - Segmented long recordings into utterances using Voice Activity Detection (pyannote)
+  - Resulting segments: 1,312 utterances, avg duration 14.0s
+
+Data Preprocessing and Speech Processing skills were central to this phase. All scripts version-controlled via Git.",Transcribe all audio using Whisper-large-v3 and validate transcript quality.,,,2026-03-04 07:13:32.000000+00:00
+1217,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,04-03-2026,on_track,"Completed comprehensive benchmark report covering all evaluation phases.
+
+Report Contents:
+  1. Baseline comparison across VQA-v2, TextVQA, ChartQA
+  2. Medical imaging QA — annotation methodology and results
+  3. Augmentation experiments and findings
+  4. InternVL2 finetuning results and improvement analysis
+  5. Latency and GPU memory profiling per model
+
+Key Recommendation:
+  InternVL2-8B is the best open-source VLM for document and chart understanding tasks. For medical imaging, domain finetuning provides a 17.5% absolute accuracy gain.
+
+Documentation and Communication skills used to produce a clear, well-structured report presented to the team.",Present findings and take up next milestone as guided.,,,2026-03-04 07:54:41.000000+00:00
+737,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,04-03-2026,on_track,"Ran hybrid retrieval experiments combining BM25 (lexical) and dense embeddings.
+
+Hybrid Retrieval Results:
+  Method              NDCG@10   MRR    Latency
+  Dense only:         0.74      0.88   430ms
+  BM25 only:          0.61      0.76   35ms
+  Hybrid (α=0.3):     0.79      0.91   465ms  ← best
+  Hybrid (α=0.5):     0.77      0.90   465ms
+  Hybrid (α=0.7):     0.75      0.89   465ms
+
+Optimal α=0.3 (30% BM25, 70% dense). Hybrid outperforms dense-only by +0.05 NDCG@10.
+
+Information Retrieval and SQL skills applied to systematically track and query all experiment results.",Implement HyDE (Hypothetical Document Embeddings) for query expansion.,,,2026-03-04 11:50:09.000000+00:00
+739,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,05-03-2026,on_track,"Dockerized the full RAG pipeline for reproducible deployment.
+
+Docker Setup:
+  - Base image: python:3.11-slim
+  - Multi-stage build: builder stage installs deps, final stage copies only what's needed
+  - Final image size: 1.2GB (down from 4.8GB with naive single-stage build)
+  - Environment variables passed via .env file — no secrets in image
+
+Services Containerized:
+  - Embedding service (FastAPI)
+  - FAISS retrieval service (FastAPI)
+  - Re-ranker service (FastAPI)
+  - Orchestration layer (LangChain)
+
+Docker and API Development skills were both applied extensively here. All services communicate via internal Docker network.",Deploy to staging and run end-to-end latency and throughput benchmarks.,,,2026-03-05 08:08:19.000000+00:00
+668,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,05-03-2026,on_track,"Prepared final evaluation report covering the full LLM finetuning and evaluation cycle.
+
+Report Structure:
+  1. Dataset preparation methodology
+  2. Finetuning configuration and training curves
+  3. Base vs. finetuned comparison across all 5 metrics
+  4. Error recovery improvement analysis
+  5. Prompt engineering iterations and their impact
+
+Visualizations Included:
+  - Training loss curves (3 epochs)
+  - Metric-wise bar charts (base vs. finetuned)
+  - Score distribution histograms per difficulty level
+
+Documentation skills were applied to produce a thorough, well-structured report. Report shared with team and received positive feedback.",Present findings to team. Begin next project milestone as guided.,,,2026-03-05 08:15:06.000000+00:00
+854,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,05-03-2026,on_track,"Set up VLM evaluation framework for CLIP, LLaVA-1.5-7B, and InternVL2-8B.
+
+Environment:
+  - GPU: 2x A100 40GB (multi-GPU inference via accelerate)
+  - Datasets loaded via HuggingFace datasets: VQA-v2, TextVQA, ChartQA
+
+Baseline Results on VQA-v2 (2,000-sample subset):
+  Model           Accuracy   Latency/sample
+  CLIP:           54.2%      120ms
+  LLaVA-1.5-7B:  63.8%      340ms
+  InternVL2-8B:  71.4%      510ms
+
+Computer Vision and PyTorch skills were essential for setting up multi-GPU inference correctly.",Expand evaluation to TextVQA and ChartQA benchmarks.,,,2026-03-05 09:23:41.000000+00:00
+1222,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,05-03-2026,on_track,"Ran failure analysis on InternVL2 vs GPT-4V performance gap on medical QA.
+
+Analysis Methodology:
+  - Manually reviewed 46 questions where GPT-4V was correct and InternVL2 was wrong
+  - Categorized failure types
+
+Failure Mode Distribution:
+  Type                              Count   % of failures
+  Small object / lesion detection:  18      39.1%
+  OCR in dense scan text:           12      26.1%
+  Severity scale interpretation:     9      19.6%
+  Multi-image reasoning:             7      15.2%
+
+Key Insight:
+  InternVL2 struggles most with small-scale spatial reasoning in dense medical images. This is an architecture-level limitation not addressable by prompt tuning alone.
+
+Problem Solving skills applied to design a systematic failure categorization framework.",Incorporate failure analysis findings into final report.,,,2026-03-05 09:33:54.000000+00:00
+1041,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,05-03-2026,on_track,"Collected and analyzed 2,000 Hinglish (Hindi-English code-switched) samples.
+
+Data Collection:
+  - Scraped from Twitter/X using Hindi + English hashtags common in Indian discourse
+  - Annotated with: language per token (Hindi/English/Other), sentiment, topic
+
+Baseline Model Performance on Hinglish:
+  Model           F1 (NLI)   Notes
+  XLM-R:          39.2%      Poor — code-switching not in pretraining distribution
+  mBERT:          36.8%      Slightly worse
+  GPT-5.1 (few-shot): 58.4%  Strong, handles switching well in context
+
+Key Challenge:
+  Standard tokenizers split Hinglish words incorrectly — ""karna"" (करना) often tokenized as Hindi UNK when written in Latin script.
+
+Communication skills used to present these findings clearly to the team and get alignment on next steps.",Build code-switching classifier and fine-tune for Hinglish NLU.,,,2026-03-05 10:02:00.000000+00:00
+1227,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,06-03-2026,on_track,"Set up VLM evaluation framework for CLIP, LLaVA-1.5-7B, and InternVL2-8B.
+
+Environment:
+  - GPU: 2x A100 40GB (multi-GPU inference via accelerate)
+  - Datasets loaded via HuggingFace datasets: VQA-v2, TextVQA, ChartQA
+
+Baseline Results on VQA-v2 (2,000-sample subset):
+  Model           Accuracy   Latency/sample
+  CLIP:           54.2%      120ms
+  LLaVA-1.5-7B:  63.8%      340ms
+  InternVL2-8B:  71.4%      510ms
+
+Computer Vision and PyTorch skills were essential for setting up multi-GPU inference correctly.",Expand evaluation to TextVQA and ChartQA benchmarks.,,,2026-03-06 06:44:23.000000+00:00
+745,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,06-03-2026,on_track,"Profiled full pipeline latency across all components under load.
+
+Latency Breakdown (p50 / p95 across 500 queries):
+  Component           p50     p95
+  Embedding:          118ms   145ms
+  FAISS Retrieval:    43ms    61ms
+  Re-ranking:         92ms    128ms  (after MiniLM switch)
+  LLM Generation:     620ms   890ms  ← dominant cost
+  Total E2E:          873ms   1,224ms
+
+Throughput: 41 queries/min under single-replica setup.
+
+Git used for version control of all pipeline configs. Statistical Analysis applied to compute percentile latencies from 500-query load test logs.",Optimize LLM generation latency via speculative decoding or caching frequent queries.,,,2026-03-06 10:31:56.000000+00:00
+1049,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,06-03-2026,at_risk,"Attempted to set up Docker environment for reproducible multilingual evaluation.
+
+Work Done:
+  - Created Dockerfile with Python 3.11 + HuggingFace + multilingual dependencies
+  - Container runs XNLI evaluation correctly for English and Hindi
+
+Issues Encountered:
+  - Docker is a weak skill area — spent significant time on permission and volume mount issues
+  - Non-Latin script rendering inside container logs was corrupted (encoding issue)
+  - Multi-language font support required additional packages not in base image
+
+Resolved encoding issue with help from team documentation. Container is functional but not optimized.",Finalize Docker image and document setup process for team replication.,Docker is not a strong skill area — volume mount and encoding issues for non-Latin scripts caused significant delays.,,2026-03-06 11:12:31.000000+00:00
+961,c1d23e45-9012-4ghi-bcde-fg3456789012,Speech-Recognition-Dataset,102,rohan,06-03-2026,on_track,"Transcribed full 5.1-hour dataset using Whisper-large-v3.
+
+Transcription Summary:
+  - Total utterances transcribed: 1,312
+  - Transcription time: ~4 hours on A100 GPU
+  - Word Error Rate (WER) on 100-sample validation set: 8.2%
+
+Quality Breakdown by Difficulty:
+  Clear speech:      WER = 4.1%
+  Accented speech:   WER = 11.3%
+  Background noise:  WER = 18.7%
+
+HuggingFace pipeline used for Whisper inference. Git used to track all transcription scripts and dataset manifests. Speech Processing and HuggingFace skills applied throughout.",Add speaker diarization labels and identify noisy recordings for cleanup.,,,2026-03-06 12:40:40.000000+00:00
+748,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,09-03-2026,on_track,"Implemented query result caching using Redis to reduce redundant LLM calls.
+
+Cache Design:
+  - Key: SHA256 hash of (query + top-5 retrieved doc IDs)
+  - TTL: 1 hour
+  - Cache hit rate on test set: 34% (many repeated queries in evaluation)
+
+Performance with Caching:
+  - Cache hit latency:  ~18ms
+  - Cache miss latency: ~873ms (no change)
+  - Effective avg latency (with 34% hit rate): ~593ms
+
+Information Retrieval, API Development, and Problem Solving skills applied to design the caching layer correctly without stale result issues.","Run full 1,000-query benchmark and prepare final pipeline report.",,,2026-03-09 06:11:54.000000+00:00
+1135,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,115,karan,09-03-2026,on_track,"Implemented query result caching using Redis to reduce redundant LLM calls.
+
+Cache Design:
+  - Key: SHA256 hash of (query + top-5 retrieved doc IDs)
+  - TTL: 1 hour
+  - Cache hit rate on test set: 34% (many repeated queries in evaluation)
+
+Performance with Caching:
+  - Cache hit latency:  ~18ms
+  - Cache miss latency: ~873ms (no change)
+  - Effective avg latency (with 34% hit rate): ~593ms
+
+Information Retrieval, API Development, and Problem Solving skills applied to design the caching layer correctly without stale result issues.","Run full 1,000-query benchmark and prepare final pipeline report.",,,2026-03-09 06:54:09.000000+00:00
+671,2e131ca1-5c48-4bf5-9b68-8fab99210463,LLM-Finetuning-eval,84,isha,10-03-2026,on_track,"Evaluated Qwen3.5-0.8B vs Qwen3.5-2B on the finetuned tutoring pipeline.
+
+Model Comparison (50 questions each):
+                        0.8B    2B
+  Correctness:          4.11    4.71    (+0.60)
+  Pedagogical Quality:  3.52    3.88    (+0.36)
+  Feedback Relevance:   3.78    4.04    (+0.26)
+  Next-Step Clarity:    3.61    4.12    (+0.51)
+  Error Recovery:       3.08    3.91    (+0.83)
+
+Key Observations:
+  - 2B model outperforms 0.8B across all dimensions
+  - Largest gap is in Error Recovery — 0.8B frequently produces vague recovery hints
+  - 0.8B response latency: ~4s per step vs ~9s for 2B
+
+HuggingFace and Evaluation & Benchmarking skills used throughout.",Test INT8 quantized version of 2B model and analyze latency vs quality trade-off.,,,2026-03-10 06:49:27.000000+00:00
+860,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,95,priya,10-03-2026,on_track,"Applied comprehensive data preprocessing to normalize inputs across benchmarks.
+
+Preprocessing Steps:
+  1. Resized all images to model-native resolution (448x448 for InternVL2, 336x336 for LLaVA)
+  2. Normalized pixel values using per-model mean/std
+  3. Fixed 312 corrupted image entries in TextVQA (replaced with placeholder)
+  4. Standardized answer format: stripped punctuation, lowercased for exact-match scoring
+  5. Removed 88 ambiguous questions with multiple valid answers
+
+Data Preprocessing and Computer Vision skills were central to ensuring evaluation consistency across models.",Run inference on cleaned TextVQA and ChartQA splits for all 3 models.,,,2026-03-10 08:05:01.000000+00:00
+1232,b9c45d82-5678-4def-abcd-ef9012345678,Vision-Model-Benchmarking,119,divya,10-03-2026,on_track,"Applied comprehensive data preprocessing to normalize inputs across benchmarks.
+
+Preprocessing Steps:
+  1. Resized all images to model-native resolution (448x448 for InternVL2, 336x336 for LLaVA)
+  2. Normalized pixel values using per-model mean/std
+  3. Fixed 312 corrupted image entries in TextVQA (replaced with placeholder)
+  4. Standardized answer format: stripped punctuation, lowercased for exact-match scoring
+  5. Removed 88 ambiguous questions with multiple valid answers
+
+Data Preprocessing and Computer Vision skills were central to ensuring evaluation consistency across models.",Run inference on cleaned TextVQA and ChartQA splits for all 3 models.,,,2026-03-10 09:57:57.000000+00:00
+753,a3f72b19-1234-4abc-89ef-cde012345678,RAG-Pipeline-Optimization,91,arjun,10-03-2026,on_track,"Completed full 1,000-query benchmark across all pipeline configurations.
+
+Final Benchmark Summary:
+  Configuration               NDCG@10   MRR    Avg Latency
+  Baseline dense:             0.61      0.74   430ms
+  + Re-ranker:                0.74      0.88   430ms
+  + Hybrid retrieval:         0.79      0.91   465ms
+  + Domain-adapted embedding: 0.83      0.93   465ms
+  + Redis caching (34% hit):  0.83      0.93   310ms  ← final config
+
+Documented all configurations, hyperparameters, and results in a structured report. Shared with team for review.",Start multi-document QA experiments as next milestone.,,,2026-03-10 12:48:02.000000+00:00
+1052,d4e56f78-3456-4jkl-cdef-gh6789012345,Multilingual-NLP-Evaluation,108,meera,10-03-2026,on_track,"Built and evaluated code-switching classifier for Hinglish text.
+
+Model Architecture:
+  - Base: XLM-R-base with classification head
+  - Task: Token-level language identification (Hindi / English / Mixed / Other)
+  - Training data: 1,600 annotated Hinglish samples (80/20 split)
+
+Results:
+  Token-level accuracy:  84.2%
+  Per-class F1:
+    Hindi tokens:    88.1%
+    English tokens:  91.3%
+    Mixed tokens:    61.4%  ← hardest (portmanteau / code-mixed morphology)
+
+Documentation of classifier methodology and results written clearly for team review.",Use classifier outputs as features for downstream Hinglish NLU fine-tuning.,,,2026-03-10 12:51:48.000000+00:00
