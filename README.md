@@ -83,7 +83,7 @@ The standard operational pipeline follows this step-by-step path:
 
 ## Dashboard Preview
 
-![Dashboard Preview](https://skill-intelligence-dashboard-app-7dawzgmvesva35voqc7i3b.streamlit.app/)
+[Open the Live Dashboard](https://skill-intelligence-dashboard-app-7dawzgmvesva35voqc7i3b.streamlit.app/)
 
 ## Installation Instructions
 
