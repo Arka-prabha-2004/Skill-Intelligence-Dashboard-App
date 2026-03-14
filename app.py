@@ -233,12 +233,6 @@ else:
 skill_counts = processed_data.get("aggregated", processed_data) if isinstance(processed_data, dict) and "aggregated" in processed_data else processed_data
 user_counts = processed_data.get("by_user", {}) if isinstance(processed_data, dict) and "by_user" in processed_data else {}
 
-        skill_counts = get_skill_counts_from_upload(uploaded_file.getvalue(), uploaded_file.name)
-    source_label = f"📂 {uploaded_file.name}"
-else:
-    skill_counts = get_skill_counts_from_file("activity_log.csv")
-    source_label = "📂 activity_log.csv (default)"
-
 # ─── Group Skills ─────────────────────────────────────────────────────────────
 @st.cache_data
 def get_grouped_data(counts: dict, thresh: int) -> dict:
@@ -375,11 +369,6 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "🤖 AI Clustering",
     "👥 Multi-User",
     "📈 Evolution"
-tab1, tab2, tab3, tab4 = st.tabs([
-    "📊 Frequency Distribution",
-    "🗂️ Skill Hierarchy",
-    "🕸️ Skill Network",
-    "⚖️ General vs Specific",
 ])
 
 # ── Tab 1: Frequency Distribution ─────────────────────────────────────────────
@@ -473,9 +462,6 @@ with tab2:
     else:
         st.info("No hierarchy data available.")
 
-# ── Tab 3: Knowledge Graph ─────────────────────────────────────────────────────
-with tab3:
-    st.subheader("Knowledge Graph")
 # ── Tab 3: Skill Network ───────────────────────────────────────────────────────
 with tab3:
     st.subheader("Skill Relationship Network")
