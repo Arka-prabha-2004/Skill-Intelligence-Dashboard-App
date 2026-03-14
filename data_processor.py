@@ -79,6 +79,16 @@ def extract_skills(df):
         "aggregated": skill_counts,
         "by_user": user_counts
     }
+    all_extracted = []
+    
+    for col in text_cols:
+        if col in df.columns:
+            # Use dropna() to avoid iterating over missing values
+            for text in df[col].dropna():
+                all_extracted.extend(extract_skills_from_text(text))
+                
+    skill_counts = Counter(all_extracted)
+    return dict(skill_counts)
 
 def process_dataset(data):
     """

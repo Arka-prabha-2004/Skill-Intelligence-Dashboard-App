@@ -233,6 +233,12 @@ else:
 skill_counts = processed_data.get("aggregated", processed_data) if isinstance(processed_data, dict) and "aggregated" in processed_data else processed_data
 user_counts = processed_data.get("by_user", {}) if isinstance(processed_data, dict) and "by_user" in processed_data else {}
 
+        skill_counts = get_skill_counts_from_upload(uploaded_file.getvalue(), uploaded_file.name)
+    source_label = f"📂 {uploaded_file.name}"
+else:
+    skill_counts = get_skill_counts_from_file("activity_log.csv")
+    source_label = "📂 activity_log.csv (default)"
+
 # ─── Group Skills ─────────────────────────────────────────────────────────────
 @st.cache_data
 def get_grouped_data(counts: dict, thresh: int) -> dict:
@@ -287,6 +293,9 @@ if live_stream:
         st.success(f"Detected new activity: **{sim_skill}**")
         time.sleep(1) # Hold message briefly
     placeholder.empty() # Clear after holding
+
+    st.caption(f"Data source: {source_label}")
+st.markdown("---")
 
 # ─── KPI Cards ────────────────────────────────────────────────────────────────
 total_xp         = sum(g["experience_points"] for g in general_skills)
@@ -366,6 +375,11 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "🤖 AI Clustering",
     "👥 Multi-User",
     "📈 Evolution"
+tab1, tab2, tab3, tab4 = st.tabs([
+    "📊 Frequency Distribution",
+    "🗂️ Skill Hierarchy",
+    "🕸️ Skill Network",
+    "⚖️ General vs Specific",
 ])
 
 # ── Tab 1: Frequency Distribution ─────────────────────────────────────────────
@@ -462,6 +476,9 @@ with tab2:
 # ── Tab 3: Knowledge Graph ─────────────────────────────────────────────────────
 with tab3:
     st.subheader("Knowledge Graph")
+# ── Tab 3: Skill Network ───────────────────────────────────────────────────────
+with tab3:
+    st.subheader("Skill Relationship Network")
     st.caption("Each category (red) is connected to its detected child skills (blue).")
 
     G = nx.Graph()

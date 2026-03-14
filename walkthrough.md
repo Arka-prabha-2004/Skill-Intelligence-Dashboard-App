@@ -20,6 +20,9 @@ Built a complete pipeline and Streamlit dashboard to process user activity logs,
      - **AI Cluster Semantic Map**: Added a new simulated AI 2-Dimensional PCA projection to group skills based on their conceptual and semantic relationships, dynamically sized by experience.
      - **Multi-User Comparison Chart**: Extracts true multi-user data (parsed from dataset columns like `intern_name`) via `data_processor.py` to compare different users' extracted skill patterns using a clear Density Heatmap for easy visual crossover.
      - **Skill Evolution Timeline**: Added a timeseries area chart measuring simulated accumulated experience growth per-skill over a configurable timeframe.
+3. **[app.py](file:///c:/Users/Swikriti%20Paul/OneDrive/Desktop/Coriolis/app.py)**
+   - Interactive Streamlit Application wrapping the logic.
+   - Contains a dynamic threshold slider, KPI Metrics, Experience Distribution Bar Charts, Skill Hierarchy visualization (Plotly Treemap), and Network Relationship Graphs.
 
 ## Validation Results
 - Executed `data_processor.py` successfully over the CSV dataset; accurately mapped 26 unique skills with correct semantic frequencies (e.g., `llm`: 39, `finetuning`: 39, `int8`: 18, `qwen`: 4).
@@ -28,5 +31,6 @@ Built a complete pipeline and Streamlit dashboard to process user activity logs,
 To run the dashboard locally, use the following command in your terminal:
 ```bash
 cd "c:\Users\Swikriti Paul\OneDrive\Desktop\coriolis_final_update"
+cd "c:\Users\Swikriti Paul\OneDrive\Desktop\Coriolis"
 streamlit run app.py
 ```
